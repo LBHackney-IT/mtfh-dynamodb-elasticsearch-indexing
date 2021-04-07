@@ -27,6 +27,7 @@ functions:
     name: ${self:service}-${self:provider.stage}
     handler: DynamoDBIndexing::DynamoDBIndexing.Function::FunctionHandler
     role: lambdaExecutionRole
+    timeout: 900
     events:
       - sns:
           arn:
