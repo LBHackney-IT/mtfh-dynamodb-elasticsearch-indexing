@@ -23,7 +23,7 @@ namespace DynamoDBIndexing
 
         public async Task FunctionHandler(SNSEvent evnt, ILambdaContext context)
         {
-            foreach(var record in evnt.Records)
+            foreach (var record in evnt.Records)
             {
                 await ProcessRecordAsync(record, context);
             }

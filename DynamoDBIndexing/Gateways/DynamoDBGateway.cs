@@ -24,7 +24,7 @@ namespace DynamoDBIndexing.Gateways
                 foreach (var document in documentList)
                 {
                     yield return document;
-                }   
+                }
             } while (!search.IsDone);
         }
     }

@@ -21,7 +21,7 @@ namespace DynamoDBIndexing.UseCase
             ElasticSearchGateway elasticSearchGateway = new ElasticSearchGateway(IndexNodeHost, IndexName);
             DynamoDBGateway dynamoDBGateway = new DynamoDBGateway();
 
-            await foreach(Document document in dynamoDBGateway.ScanDynamoDBTable(TableName))
+            await foreach (Document document in dynamoDBGateway.ScanDynamoDBTable(TableName))
             {
                 Person TransformedPerson = document.ToDomainPerson();
                 context.Logger.LogLine($"Item: {document["id"]}");
