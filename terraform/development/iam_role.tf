@@ -10,8 +10,10 @@ resource "aws_iam_policy" "lambda_dynamodb_sns_policy" {
         {
             "Effect": "Allow",
             "Action": [
-                        "dynamodb:BatchGetItem",
-                        "dynamodb:GetItem",
+                        "dynamodb:BatchGet*",
+                        "dynamodb:DescribeStream",
+                        "dynamodb:DescribeTable",
+                        "dynamodb:Get*",
                         "dynamodb:Query",
                         "dynamodb:Scan"
                      ],
