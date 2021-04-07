@@ -18,7 +18,7 @@ namespace DynamoDBIndexing.Factories
             {
                 IdentificationType = databaseEntity["identificationType"],
                 Value = databaseEntity["value"],
-                IsOriginalDocumentSeen = (bool)databaseEntity["isOriginalDocumentSeen"],
+                IsOriginalDocumentSeen = (bool) databaseEntity["isOriginalDocumentSeen"],
                 LinkToDocument = databaseEntity["linkToDocument"]
             };
         }
@@ -34,8 +34,8 @@ namespace DynamoDBIndexing.Factories
                 MiddleName = databaseEntity["middlename"],
                 Surname = databaseEntity["surname"],
                 DateOfBirth = databaseEntity["dateOfBirth"],
-                Identifications = ((List<Document>)databaseEntity["identifications"]).Select(p => p.ToDomainIdentification()),
-                PersonTypes = (List<String>)databaseEntity["personTypes"]
+                Identifications = ((List<Document>) databaseEntity["identifications"]).Select(p => p.ToDomainIdentification()),
+                PersonTypes = (List<String>) databaseEntity["personTypes"]
             };
         }
     }
