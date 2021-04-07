@@ -166,8 +166,8 @@ workflows:
 #      - build-and-test
       - assume-role-development:
           context: api-assume-role-housing-development-context
-          requires:
-            - build-and-test
+#          requires:
+#            - build-and-test
           filters:
             branches:
               only: master
@@ -193,8 +193,8 @@ workflows:
 #              only: release
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
-          requires:
-              - build-and-test
+#          requires:
+#              - build-and-test
           filters:
              branches:
                only: release
