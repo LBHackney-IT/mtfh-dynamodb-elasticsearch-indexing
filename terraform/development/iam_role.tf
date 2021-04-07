@@ -27,13 +27,6 @@ resource "aws_iam_policy" "lambda_dynamodb_sns_policy" {
                         "sns:Subscribe"
                      ],
             "Resource": "${aws_sns_topic.sync_notification.arn}"
-        # },
-        # {
-        #     "Effect": "Allow",
-        #     "Action": [
-        #         "es:*"
-        #     ],
-        #     "Resource": "arn:aws:es:eu-west-2:${data.aws_caller_identity.current.account_id}:domain/housing-search-api-es/*"
         }
     ]
 }
