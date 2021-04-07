@@ -25,7 +25,7 @@ package:
 functions:
   DynamoDBIndexing:
     name: ${self:service}-${self:provider.stage}
-    handler: DynamoDBIndexing::DynamoDBIndexing.Function::FunctionHandlerAsync
+    handler: DynamoDBIndexing::DynamoDBIndexing.Function::FunctionHandler
     role: lambdaExecutionRole
     events:
       - sns:
