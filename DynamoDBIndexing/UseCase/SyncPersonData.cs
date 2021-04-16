@@ -21,10 +21,9 @@ namespace DynamoDBIndexing.UseCase
             await foreach (Document document in dynamoDBGateway.ScanDynamoDBTable(TableName))
             {
                 Person TransformedPerson = document.ToDomainPerson();
-                context.Logger.LogLine($"Item: {document["id"]}");
-                context.Logger.LogLine($"transformed Item: {TransformedPerson.ToString()}");
+                context.Logger.LogLine($"Item ID: {document["id"]}");
                 IndexResponse response = elasticSearchGateway.IndexDocument(TransformedPerson);
-                context.Logger.LogLine($"transformed Item: {response.ToString()}");
+                context.Logger.LogLine($"ElasticSearch call response: {response.ToString()}");
             }
         }
     }
