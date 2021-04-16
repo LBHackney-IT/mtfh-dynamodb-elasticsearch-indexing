@@ -7,7 +7,7 @@ using Xunit;
 using Amazon.Lambda.TestUtilities;
 using Amazon.Lambda.SNSEvents;
 
-using DynamoDBIndexing;
+using DynamoDBIndexing.Domain;
 
 namespace DynamoDBIndexing.Tests
 {
@@ -16,19 +16,10 @@ namespace DynamoDBIndexing.Tests
         [Fact]
         public async Task TestSQSEventLambdaFunction()
         {
-            var snsEvent = new SNSEvent
-            {
-                Records = new List<SNSEvent.SNSRecord>
-                {
-                    new SNSEvent.SNSRecord
-                    {
-                        Sns = new SNSEvent.SNSMessage()
-                        {
-                            Message = "foobar"
-                        }
-                    }
-                }
-            };
+            DynamoDBIndexingInput input = new DynamoDBIndexingInput();
+            input.DynamoTable = "Persons";
+            input.IndexNodeHost = "index host";
+            input.IndexName = "persons_index";
 
             var logger = new TestLambdaLogger();
             var context = new TestLambdaContext
@@ -37,7 +28,7 @@ namespace DynamoDBIndexing.Tests
             };
 
             var function = new Function();
-            await function.FunctionHandler(snsEvent, context);
+            await function.FunctionHandler(input, context);
 
             Assert.Contains("Processed record foobar", logger.Buffer.ToString());
         }

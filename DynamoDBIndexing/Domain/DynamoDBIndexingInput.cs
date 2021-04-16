@@ -1,6 +1,6 @@
 namespace DynamoDBIndexing.Domain
 {
-    public class SnsMessage
+    public class DynamoDBIndexingInput
     {
         public string DynamoTable { get; set; }
         public string IndexNodeHost { get; set; }

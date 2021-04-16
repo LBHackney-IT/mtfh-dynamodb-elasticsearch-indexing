@@ -1,9 +1,6 @@
 using System.Threading.Tasks;
 
 using Amazon.Lambda.Core;
-using Amazon.Lambda.SNSEvents;
-
-using Newtonsoft.Json;
 
 using DynamoDBIndexing.Domain;
 using DynamoDBIndexing.UseCase;
@@ -18,22 +15,18 @@ namespace DynamoDBIndexing
         {
         }
 
-        public async Task FunctionHandler(SNSEvent evnt, ILambdaContext context)
+        public async Task FunctionHandler(DynamoDBIndexingInput input, ILambdaContext context)
         {
-            foreach (var record in evnt.Records)
-            {
-                await ProcessRecordAsync(record, context);
-            }
+            await ProcessRecordAsync(input, context);
         }
 
-        private async Task ProcessRecordAsync(SNSEvent.SNSRecord record, ILambdaContext context)
+        private async Task ProcessRecordAsync(DynamoDBIndexingInput input, ILambdaContext context)
         {
-            context.Logger.LogLine($"Processed record {record.Sns.Message}");
-            SnsMessage snsMessage = JsonConvert.DeserializeObject<SnsMessage>(record.Sns.Message);
-            context.Logger.LogLine($"dynamoTable: {snsMessage.DynamoTable}");
+            context.Logger.LogLine($"dynamoTable: {input.DynamoTable}");
+            context.Logger.LogLine($"IndexName: {input.IndexName}");
 
             SyncPersonData syncPersonData = new SyncPersonData();
-            await syncPersonData.ExecuteSyncPersonData(snsMessage.DynamoTable, snsMessage.IndexNodeHost, snsMessage.IndexName, context);
+            await syncPersonData.ExecuteSyncPersonData(input.DynamoTable, input.IndexNodeHost, input.IndexName, context);
 
             await Task.CompletedTask;
         }
