@@ -16,15 +16,6 @@ resource "aws_iam_policy" "lambda_dynamodb_sns_policy" {
                         "dynamodb:Scan"
                      ],
             "Resource": "arn:aws:dynamodb:eu-west-2:${data.aws_caller_identity.current.account_id}:table/Persons"
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-                        "sns:GetTopicAttributes",
-                        "sns:ListSubscriptionsByTopic",
-                        "sns:Subscribe"
-                     ],
-            "Resource": "${aws_sns_topic.sync_notification.arn}"
         }
     ]
 }
