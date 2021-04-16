@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace DynamoDBIndexing.Domain
 {
     public class SnsMessage

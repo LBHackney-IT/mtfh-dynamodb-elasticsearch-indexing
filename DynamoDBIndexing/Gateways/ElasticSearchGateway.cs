@@ -1,8 +1,6 @@
 using System;
-using System.Threading.Tasks;
 
 using Nest;
-using Elasticsearch.Net;
 
 namespace DynamoDBIndexing.Gateways
 {
