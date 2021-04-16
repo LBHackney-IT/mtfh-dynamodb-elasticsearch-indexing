@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 
 using Nest;
+using Elasticsearch.Net;
 
 namespace DynamoDBIndexing.Gateways
 {
@@ -9,20 +10,20 @@ namespace DynamoDBIndexing.Gateways
     {
         private readonly string _indexNodeHost;
         private readonly string _indexName;
+        private readonly ElasticClient _client;
 
         public ElasticSearchGateway(string indexNodeHost, string indexName)
         {
             _indexNodeHost = indexNodeHost;
             _indexName = indexName;
+            Uri node = new Uri(_indexNodeHost);
+            ConnectionSettings settings = new ConnectionSettings(node);
+            _client = new ElasticClient(settings);
         }
 
         public IndexResponse IndexDocument(Object doc)
         {
-            var node = new Uri(_indexNodeHost);
-            var settings = new ConnectionSettings(node);
-            var client = new ElasticClient(settings);
-
-            var response = client.Index(doc, idx => idx.Index(_indexName));
+            var response = _client.Index(doc, idx => idx.Index(_indexName));
 
             return response;
         }
