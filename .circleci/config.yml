@@ -172,6 +172,19 @@ workflows:
           filters:
             branches:
               only: master
+      - aws-ecr/build_and_push_image:
+          name: build_and_push_image
+          dockerfile: ./DynamoDBIndexingCore/Dockerfile
+          path: ./DynamoDBIndexingCore
+          account-url: AWS_ECR_HOST
+          repo: "mtfh-dynamodb-elasticsearch-indexing-development"
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          region: AWS_REGION
+          tag: "${CIRCLE_SHA1}"
+          filters:
+            branches:
+              only: master
       - terraform-init-and-apply-to-development:
           requires:
             - assume-role-development
