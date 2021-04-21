@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamoDBIndexing", "DynamoD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamoDBIndexing.Tests", "DynamoDBIndexing.Tests\DynamoDBIndexing.Tests.csproj", "{DE8E4E61-EB76-416B-8417-E8F2F6A0C0D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DynamoDBIndexingCore", "DynamoDBIndexingCore\DynamoDBIndexingCore.csproj", "{BDC546A3-AF34-5FB2-8417-F4E209ED6589}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,5 +21,9 @@ Global
 		{DE8E4E61-EB76-416B-8417-E8F2F6A0C0D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE8E4E61-EB76-416B-8417-E8F2F6A0C0D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE8E4E61-EB76-416B-8417-E8F2F6A0C0D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDC546A3-AF34-5FB2-8417-F4E209ED6589}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDC546A3-AF34-5FB2-8417-F4E209ED6589}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDC546A3-AF34-5FB2-8417-F4E209ED6589}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDC546A3-AF34-5FB2-8417-F4E209ED6589}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
