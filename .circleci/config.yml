@@ -50,14 +50,14 @@ commands:
       - checkout
       - run:
           command: |
-            cd ./terraform/<<parameters.environment>>/
+            cd ./terraform/<<parameters.environment_name>>/
             terraform get -update=true
             terraform init
           name: get and init
       - run:
           name: apply
           command: |
-            cd ./terraform/<<parameters.environment>>/
+            cd ./terraform/<<parameters.environment_name>>/
             terraform apply -auto-approve
   deploy-lambda:
     description: "Deploys API via Serverless"
