@@ -63,6 +63,11 @@ commands:
       - run:
           name: apply
           command: |
+            export TF_environment_name=<<parameters.environment_name>>
+            export TF_ecs_cluster_name=<<parameters.ecs_cluster_name>>
+            export TF_ecr_host=<<parameters.ecr_host>>
+            export TF_ecr_repo_name=<<parameters.ecr_repo_name>>
+            export TF_ecr_image_sha1=<<parameters.ecr_image_sha1>>
             cd ./terraform/<<parameters.environment_name>>/
             terraform apply -auto-approve
   deploy-lambda:
