@@ -63,11 +63,11 @@ commands:
       - run:
           name: apply
           command: |
-            export TF_environment_name=<<parameters.environment_name>>
-            export TF_ecs_cluster_name=<<parameters.ecs_cluster_name>>
-            export TF_ecr_host=<<parameters.ecr_host>>
-            export TF_ecr_repo_name=<<parameters.ecr_repo_name>>
-            export TF_ecr_image_sha1=<<parameters.ecr_image_sha1>>
+            export TF_VAR_environment_name=<<parameters.environment_name>>
+            export TF_VAR_ecs_cluster_name=<<parameters.ecs_cluster_name>>
+            export TF_VAR_ecr_host=<<parameters.ecr_host>>
+            export TF_VAR_ecr_repo_name=<<parameters.ecr_repo_name>>
+            export TF_VAR_ecr_image_sha1=<<parameters.ecr_image_sha1>>
             cd ./terraform/<<parameters.environment_name>>/
             terraform apply -auto-approve
   deploy-lambda:
@@ -143,8 +143,8 @@ jobs:
     steps:
       - terraform-init-then-apply:
           environment_name: "development"
-          ecs_cluster_name: ECS_CLUSTER_NAME
-          ecr_host: AWS_ECR_HOST
+          ecs_cluster_name: $ECS_CLUSTER_NAME
+          ecr_host: $AWS_ECR_HOST
           ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-development"
           ecr_image_sha1: "${CIRCLE_SHA1}"
   terraform-init-and-apply-to-staging:
@@ -152,8 +152,8 @@ jobs:
     steps:
       - terraform-init-then-apply:
           environment_name: "staging"
-          ecs_cluster_name: ECS_CLUSTER_NAME
-          ecr_host: AWS_ECR_HOST
+          ecs_cluster_name: $ECS_CLUSTER_NAME
+          ecr_host: $AWS_ECR_HOST
           ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-staging"
           ecr_image_sha1: "${CIRCLE_SHA1}"
   terraform-init-and-apply-to-production:
@@ -161,8 +161,8 @@ jobs:
     steps:
       - terraform-init-then-apply:
           environment_name: "production"
-          ecs_cluster_name: ECS_CLUSTER_NAME
-          ecr_host: AWS_ECR_HOST
+          ecs_cluster_name: $ECS_CLUSTER_NAME
+          ecr_host: $AWS_ECR_HOST
           ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-production"
           ecr_image_sha1: "${CIRCLE_SHA1}"
   deploy-to-development:
