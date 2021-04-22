@@ -194,7 +194,7 @@ workflows:
           requires:
             - assume-role-development
       - terraform-init-and-apply-to-development:
-          context: api-assume-role-housing-staging-context
+          context: api-assume-role-housing-development-context
           requires:
             - build-and-push-image
           filters:
