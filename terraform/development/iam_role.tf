@@ -44,11 +44,7 @@ EOF
   }
 }
 
-resource "aws_iam_role" "ecs_task_role" {
-  name               = "dynamodb-elasticsearch-indexing-ecs-task-execution"
-  path               = "/mtfh-dynamodb-elasticsearch-indexing/"
-
-  assume_role_policy = <<EOF
+data "aws_iam_policy_document" "assume_role_policy" {
   statement {
     actions = ["sts:AssumeRole"]
 
@@ -57,7 +53,12 @@ resource "aws_iam_role" "ecs_task_role" {
       identifiers = ["ecs-tasks.amazonaws.com"]
     }
   }
-  EOF
+}
+
+resource "aws_iam_role" "ecs_task_role" {
+  name               = "dynamodb-elasticsearch-indexing-ecs-task-execution"
+  path               = "/mtfh-dynamodb-elasticsearch-indexing/"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 
   tags = {
     Name              = "mtfh-dynamodb-elasticsearch-indexing-${var.environment_name}"
