@@ -12,7 +12,7 @@ resource "aws_ecs_cluster" "cluster" {
 
 resource "aws_ecs_task_definition" "app" {
   family                   = "${var.repo_name}-${var.environment_name}-task"
-  execution_role_arn       = aws_iam_policy.lambda_dynamodb_sns_policy.arn
+  execution_role_arn       = aws_iam_role.ecs_task_role.arn
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = 256
