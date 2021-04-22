@@ -196,7 +196,7 @@ workflows:
       - terraform-init-and-apply-to-development:
           context: api-assume-role-housing-staging-context
           requires:
-            - assume-role-development
+            - aws-ecr/build_and_push_image
           filters:
             branches:
               only: master
