@@ -179,7 +179,7 @@ workflows:
               only: master
       - aws-ecr/build_and_push_image:
           context: api-assume-role-housing-development-context
-          name: build_and_push_image
+          name: build-and-push-image
           dockerfile: ./DynamoDBIndexingCore/Dockerfile
           path: ./DynamoDBIndexingCore
           account-url: AWS_ECR_HOST
@@ -196,7 +196,7 @@ workflows:
       - terraform-init-and-apply-to-development:
           context: api-assume-role-housing-staging-context
           requires:
-            - aws-ecr/build_and_push_image
+            - build-and-push-image
           filters:
             branches:
               only: master
