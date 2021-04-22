@@ -41,7 +41,9 @@ commands:
   terraform-init-then-apply:
     description: "Initializes and applies terraform configuration"
     parameters:
-      environment:
+      environment_name:
+        type: string
+      ecs_cluster_name:
         type: string
     steps:
       - *attach_workspace
@@ -129,17 +131,20 @@ jobs:
     executor: docker-terraform
     steps:
       - terraform-init-then-apply:
-          environment: "development"
+          environment_name: "development"
+          ecs_cluster_name: ECS_CLUSTER_NAME
   terraform-init-and-apply-to-staging:
     executor: docker-terraform
     steps:
       - terraform-init-then-apply:
-          environment: "staging"
+          environment_name: "staging"
+          ecs_cluster_name: ECS_CLUSTER_NAME
   terraform-init-and-apply-to-production:
     executor: docker-terraform
     steps:
       - terraform-init-then-apply:
-          environment: "production"
+          environment_name: "production"
+          ecs_cluster_name: ECS_CLUSTER_NAME
   deploy-to-development:
     executor: docker-dotnet
     steps:
@@ -186,7 +191,10 @@ workflows:
           filters:
             branches:
               only: master
+          requires:
+            - assume-role-development
       - terraform-init-and-apply-to-development:
+          context: api-assume-role-housing-staging-context
           requires:
             - assume-role-development
           filters:
