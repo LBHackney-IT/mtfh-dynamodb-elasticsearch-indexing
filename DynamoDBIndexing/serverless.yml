@@ -10,6 +10,8 @@ provider:
   stage: ${opt:stage}
   account: ${opt:account}
   aws_ecs_task_arn: ${opt:aws_ecs_task_arn}
+  ecr_repo_name: ${opt:ecr_repo_name}
+  ecs_cluster_name: ${opt:ecs_cluster_name}
   region: eu-west-2
   apiKeys:
     - secureAccess:
@@ -31,6 +33,9 @@ functions:
     timeout: 900
     environment:
       AWS_ECS_TASK_ARN: ${self:provider.aws_ecs_task_arn}
+      AWS_NETWORK_SUBNET: ${self:custom.vpc.${opt:stage}.subnetIds}
+      ECR_REPO_NAME: ${self:provider.ecr_repo_name}
+      ECS_CLUSTER_NAME: ${self:provider.ecs_cluster_name}
 resources:
   Resources:
     LambdaSecurityGroup:

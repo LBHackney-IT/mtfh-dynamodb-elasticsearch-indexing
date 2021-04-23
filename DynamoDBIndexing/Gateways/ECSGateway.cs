@@ -14,12 +14,16 @@ namespace DynamoDBIndexing.Gateways
         }
         public async Task<Amazon.ECS.Model.RunTaskResponse> ECSRunTask(string DynamoTable, string IndexNodeHost, string IndexName)
         {
-            string aws_ecs_task_arn = Environment.GetEnvironmentVariable("AWS_ECS_TASK_ARN");
+            string awsEcsTaskArn = Environment.GetEnvironmentVariable("AWS_ECS_TASK_ARN");
+            string awsNetworkSubnet = Environment.GetEnvironmentVariable("AWS_NETWORK_SUBNET");
+            string ecrRepoName = Environment.GetEnvironmentVariable("ECR_REPO_NAME");
+            string EcsClusterName = Environment.GetEnvironmentVariable("ECS_CLUSTER_NAME");
+            Console.WriteLine("awsNetworkSubnet" + awsNetworkSubnet);
             var AmazonECS = new AmazonECSClient();
 
             Amazon.ECS.Model.ContainerOverride containerOverride = new Amazon.ECS.Model.ContainerOverride()
             {
-                Name = "mfth-dynamodb-elasticsearch-indexing",
+                Name = ecrRepoName,
                 Environment = new List<Amazon.ECS.Model.KeyValuePair>()
                             {
                                 new Amazon.ECS.Model.KeyValuePair() {Name = "DYNAMODB_TABLE", Value = DynamoTable},
@@ -30,9 +34,9 @@ namespace DynamoDBIndexing.Gateways
 
             Amazon.ECS.Model.RunTaskResponse results = await AmazonECS.RunTaskAsync(new Amazon.ECS.Model.RunTaskRequest()
             {
-                Cluster = "mfth-dynamodb-elasticsearch-indexing",
+                Cluster = EcsClusterName,
                 LaunchType = LaunchType.FARGATE,
-                TaskDefinition = aws_ecs_task_arn,
+                TaskDefinition = awsEcsTaskArn,
                 Count = 1,
                 // NetworkConfiguration = new Amazon.ECS.Model.NetworkConfiguration()
                 // {

@@ -87,6 +87,10 @@ commands:
         type: string
       aws-account:
         type: string
+      ecr_repo_name:
+        type: string
+      ecs_cluster_name:
+        type: string
     steps:
       - *attach_workspace
       - attach_workspace:
@@ -116,7 +120,8 @@ commands:
           command: |
             AWS_ECS_TASK_ARN=`cat /tmp/workspace/aws_ecs_task_arn`
             cd ./DynamoDBIndexing/
-            sls deploy --stage <<parameters.stage>> --account <<parameters.aws-account>> --aws_ecs_task_arn $AWS_ECS_TASK_ARN --conceal
+            sls deploy --stage <<parameters.stage>> --account <<parameters.aws-account>> --aws_ecs_task_arn $AWS_ECS_TASK_ARN \
+                       --ecr_repo_name <<parameters.ecr_repo_name>> --ecs_cluster_name <<parameters.ecs_cluster_name>> --conceal
 
 jobs:
   check-code-formatting:
@@ -188,18 +193,24 @@ jobs:
       - deploy-lambda:
           stage: "development"
           aws-account: $AWS_ACCOUNT_DEVELOPMENT
+          ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-development"
+          ecs_cluster_name: $ECS_CLUSTER_NAME
   deploy-to-staging:
     executor: docker-dotnet
     steps:
       - deploy-lambda:
           stage: "staging"
           aws-account: $AWS_ACCOUNT_STAGING
+          ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-staging"
+          ecs_cluster_name: $ECS_CLUSTER_NAME
   deploy-to-production:
     executor: docker-dotnet
     steps:
       - deploy-lambda:
           stage: "production"
           aws-account: $AWS_ACCOUNT_PRODUCTION
+          ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-production"
+          ecs_cluster_name: $ECS_CLUSTER_NAME
 
 workflows:
   check-and-deploy-development:

@@ -8,11 +8,6 @@ variable "project_name" {
     default = "Housing-Development"
 }
 
-variable "repo_name" {
-    type = string
-    default = "mfth-dynamodb-elasticsearch-indexing"
-}
-
 variable "ecs_cluster_name" {
     type = string
     default = "mfth-dynamodb-elasticsearch-indexing"
