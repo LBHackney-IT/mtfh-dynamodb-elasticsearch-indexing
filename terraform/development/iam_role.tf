@@ -40,12 +40,7 @@ resource "aws_iam_policy" "lambda_dynamodb_sns_policy" {
             "ecs:RunTask"
           ],
           "Effect": "Allow",
-          "Resource": "*",
-          "Condition": {
-            "ArnEquals": {
-              "ecs:cluster": "${aws_ecs_cluster.cluster.arn}"
-            }
-          }
+          "Resource": "${aws_ecs_cluster.cluster.arn}"
         }
     ]
 }
