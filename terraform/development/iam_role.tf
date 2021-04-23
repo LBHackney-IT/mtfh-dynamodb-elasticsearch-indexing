@@ -43,7 +43,12 @@ resource "aws_iam_policy" "lambda_dynamodb_sns_policy" {
               "ecs:StopTask",
               "ecs:RunTask"
             ],
-            "Resource": "${aws_ecs_cluster.cluster.arn}"
+            "Condition": {
+                "ArnEquals": {
+                    "ecs:cluster": "${aws_ecs_cluster.cluster.arn}"
+                }
+            },
+            "Resource": "${aws_ecs_task_definition.app.arn}"
         }
     ]
 }
