@@ -42,7 +42,7 @@ namespace DynamoDBIndexing
             {
                 Cluster = "mfth-dynamodb-elasticsearch-indexing",
                 LaunchType = LaunchType.FARGATE,
-                TaskDefinition = "arn:aws:ecs:eu-west-2:364864573329:task-definition/mfth-dynamodb-elasticsearch-indexing-development-task:2",
+                TaskDefinition = "arn:aws:ecs:eu-west-2:364864573329:task-definition/mfth-dynamodb-elasticsearch-indexing-development-task:7",
                 Count = 1,
                 NetworkConfiguration = new Amazon.ECS.Model.NetworkConfiguration()
                 {
