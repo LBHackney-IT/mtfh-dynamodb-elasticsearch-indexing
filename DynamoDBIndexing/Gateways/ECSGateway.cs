@@ -38,14 +38,14 @@ namespace DynamoDBIndexing.Gateways
                 LaunchType = LaunchType.FARGATE,
                 TaskDefinition = awsEcsTaskArn,
                 Count = 1,
-                // NetworkConfiguration = new Amazon.ECS.Model.NetworkConfiguration()
-                // {
-                //     AwsvpcConfiguration = new Amazon.ECS.Model.AwsVpcConfiguration()
-                //     {
-                //         Subnets = new List<string>() { "subnet-0140d06fb84fdb547", "subnet-05ce390ba88c42bfd" },
-                //         AssignPublicIp = AssignPublicIp.DISABLED,
-                //     },
-                // },
+                NetworkConfiguration = new Amazon.ECS.Model.NetworkConfiguration()
+                {
+                    AwsvpcConfiguration = new Amazon.ECS.Model.AwsVpcConfiguration()
+                    {
+                        Subnets = new List<string>() { awsNetworkSubnet },
+                        AssignPublicIp = AssignPublicIp.DISABLED,
+                    },
+                },
                 Overrides = new Amazon.ECS.Model.TaskOverride()
                 {
                     ContainerOverrides = new List<Amazon.ECS.Model.ContainerOverride>()
