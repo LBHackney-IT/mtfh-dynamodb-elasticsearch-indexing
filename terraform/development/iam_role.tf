@@ -27,7 +27,7 @@ resource "aws_iam_policy" "lambda_dynamodb_sns_policy" {
                 "ecr:GetDownloadUrlForLayer",
                 "ecr:BatchGetImage",
             ],
-            "Resource": arn:aws:ecr:eu-west-2:${data.aws_caller_identity.current.account_id}:repository/${aws_ecr_repository.repository.name}
+            "Resource": "arn:aws:ecr:eu-west-2:${data.aws_caller_identity.current.account_id}:repository/${aws_ecr_repository.repository.name}"
         },
         {
           "Action": [
@@ -43,7 +43,7 @@ resource "aws_iam_policy" "lambda_dynamodb_sns_policy" {
           "Resource": "*",
           "Condition": {
             "ArnEquals": {
-              "ecs:cluster": ${aws_ecs_cluster.cluster.arn}
+              "ecs:cluster": "${aws_ecs_cluster.cluster.arn}"
             }
           }
         }
