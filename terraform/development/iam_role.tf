@@ -26,11 +26,26 @@ resource "aws_iam_policy" "lambda_dynamodb_sns_policy" {
                 "ecr:BatchCheckLayerAvailability",
                 "ecr:GetDownloadUrlForLayer",
                 "ecr:BatchGetImage",
-                "logs:CreateLogStream",
-                "logs:PutLogEvents",
-                "S3:*"
             ],
-            "Resource": "*"
+            "Resource": arn:aws:ecr:eu-west-2:${data.aws_caller_identity.current.account_id}:repository/${aws_ecr_repository.repository.name}
+        },
+        {
+          "Action": [
+            "ecs:DescribeContainerInstances",
+            "ecs:DescribeTasks",
+            "ecs:ListTasks",
+            "ecs:UpdateContainerAgent",
+            "ecs:StartTask",
+            "ecs:StopTask",
+            "ecs:RunTask"
+          ],
+          "Effect": "Allow",
+          "Resource": "*",
+          "Condition": {
+            "ArnEquals": {
+              "ecs:cluster": ${aws_ecs_cluster.cluster.arn}
+            }
+          }
         }
     ]
 }
