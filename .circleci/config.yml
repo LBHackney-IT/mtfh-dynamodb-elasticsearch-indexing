@@ -70,6 +70,16 @@ commands:
             export TF_VAR_ecr_image_sha1=<<parameters.ecr_image_sha1>>
             cd ./terraform/<<parameters.environment_name>>/
             terraform apply -auto-approve
+      - run:
+          name: output
+          command: |
+            cd ./terraform/<<parameters.environment_name>>/
+            mkdir -p workspace
+            terraform output -raw aws_ecs_task_arn > workspace/aws_ecs_task_arn
+      - persist_to_workspace:
+          root: ./terraform/<<parameters.environment_name>>/workspace
+          paths:
+            - aws_ecs_task_arn
   deploy-lambda:
     description: "Deploys API via Serverless"
     parameters:
@@ -95,6 +105,10 @@ commands:
             cd ./DynamoDBIndexing/
             chmod +x ./build.sh
             ./build.sh
+      - run:
+          name: Check Terraform Output
+          command: |
+            cat /tmp/workspace/aws_ecs_task_arn
       - run:
           name: Deploy lambda
           command: |
