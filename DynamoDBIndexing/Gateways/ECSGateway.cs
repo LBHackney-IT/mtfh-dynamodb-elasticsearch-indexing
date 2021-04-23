@@ -8,17 +8,12 @@ namespace DynamoDBIndexing.Gateways
 {
     public class ECSGateway
     {
-        public ECSGateway()
-        {
-
-        }
         public async Task<Amazon.ECS.Model.RunTaskResponse> ECSRunTask(string DynamoTable, string IndexNodeHost, string IndexName)
         {
             string awsEcsTaskArn = Environment.GetEnvironmentVariable("AWS_ECS_TASK_ARN");
             string awsNetworkSubnet = Environment.GetEnvironmentVariable("AWS_NETWORK_SUBNET");
             string ecrRepoName = Environment.GetEnvironmentVariable("ECR_REPO_NAME");
             string EcsClusterName = Environment.GetEnvironmentVariable("ECS_CLUSTER_NAME");
-            Console.WriteLine("awsNetworkSubnet" + awsNetworkSubnet);
             var AmazonECS = new AmazonECSClient();
 
             Amazon.ECS.Model.ContainerOverride containerOverride = new Amazon.ECS.Model.ContainerOverride()
