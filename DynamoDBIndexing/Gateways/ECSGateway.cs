@@ -7,6 +7,10 @@ namespace DynamoDBIndexing.Gateways
 {
     public class ECSGateway
     {
+        public ECSGateway()
+        {
+            
+        }
         public async Task<Amazon.ECS.Model.RunTaskResponse> ECSRunTask(string DynamoTable, string IndexNodeHost, string IndexName)
         {
             var AmazonECS = new AmazonECSClient();
