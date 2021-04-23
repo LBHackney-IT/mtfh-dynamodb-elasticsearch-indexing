@@ -9,7 +9,7 @@ namespace DynamoDBIndexing.Gateways
     {
         public ECSGateway()
         {
-            
+
         }
         public async Task<Amazon.ECS.Model.RunTaskResponse> ECSRunTask(string DynamoTable, string IndexNodeHost, string IndexName)
         {
