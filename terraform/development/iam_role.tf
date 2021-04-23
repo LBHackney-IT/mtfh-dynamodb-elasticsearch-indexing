@@ -31,6 +31,19 @@ resource "aws_iam_policy" "lambda_dynamodb_sns_policy" {
                 "S3:*"
             ],
             "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+              "ecs:DescribeContainerInstances",
+              "ecs:DescribeTasks",
+              "ecs:ListTasks",
+              "ecs:UpdateContainerAgent",
+              "ecs:StartTask",
+              "ecs:StopTask",
+              "ecs:RunTask"
+            ],
+            "Resource": "${aws_ecs_cluster.cluster.arn}"
         }
     ]
 }
