@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
@@ -13,6 +14,7 @@ namespace DynamoDBIndexing.Gateways
         }
         public async Task<Amazon.ECS.Model.RunTaskResponse> ECSRunTask(string DynamoTable, string IndexNodeHost, string IndexName)
         {
+            string aws_ecs_task_arn = Environment.GetEnvironmentVariable("AWS_ECS_TASK_ARN");
             var AmazonECS = new AmazonECSClient();
 
             Amazon.ECS.Model.ContainerOverride containerOverride = new Amazon.ECS.Model.ContainerOverride()
@@ -30,7 +32,7 @@ namespace DynamoDBIndexing.Gateways
             {
                 Cluster = "mfth-dynamodb-elasticsearch-indexing",
                 LaunchType = LaunchType.FARGATE,
-                TaskDefinition = "arn:aws:ecs:eu-west-2:364864573329:task-definition/mfth-dynamodb-elasticsearch-indexing-development-task:9",
+                TaskDefinition = aws_ecs_task_arn,
                 Count = 1,
                 // NetworkConfiguration = new Amazon.ECS.Model.NetworkConfiguration()
                 // {

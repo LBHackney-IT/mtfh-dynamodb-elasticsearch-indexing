@@ -9,6 +9,7 @@ provider:
   vpc: ${self:custom.vpc.${opt:stage}}
   stage: ${opt:stage}
   account: ${opt:account}
+  aws_ecs_task_arn: ${opt:aws_ecs_task_arn}
   region: eu-west-2
   apiKeys:
     - secureAccess:
@@ -28,6 +29,8 @@ functions:
     handler: DynamoDBIndexing::DynamoDBIndexing.Function::FunctionHandler
     role: lambdaExecutionRole
     timeout: 900
+    environment:
+      AWS_ECS_TASK_ARN: ${self:provider.account}
 resources:
   Resources:
     LambdaSecurityGroup:

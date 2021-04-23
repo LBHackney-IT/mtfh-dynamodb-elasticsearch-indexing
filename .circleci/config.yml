@@ -114,8 +114,9 @@ commands:
       - run:
           name: Deploy lambda
           command: |
+            AWS_ECS_TASK_ARN=`cat /tmp/workspace/aws_ecs_task_arn`
             cd ./DynamoDBIndexing/
-            sls deploy --stage <<parameters.stage>> --account <<parameters.aws-account>> --conceal
+            sls deploy --stage <<parameters.stage>> --account <<parameters.aws-account>> --aws_ecs_task_arn $AWS_ECS_TASK_ARN --conceal
 
 jobs:
   check-code-formatting:
