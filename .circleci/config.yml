@@ -112,10 +112,6 @@ commands:
             chmod +x ./build.sh
             ./build.sh
       - run:
-          name: Check Terraform Output
-          command: |
-            cat /tmp/workspace/aws_ecs_task_arn
-      - run:
           name: Deploy lambda
           command: |
             AWS_ECS_TASK_ARN=`cat /tmp/workspace/aws_ecs_task_arn`
@@ -134,17 +130,6 @@ jobs:
       - run:
           name: Run formatter check
           command: ./dotnet-format-local/dotnet-format --check
-#  build-and-test:
-#    executor: docker-python
-#    steps:
-#      - checkout
-#      - setup_remote_docker
-#      - run:
-#          name: build
-#          command: docker-compose build person-api-test
-#      - run:
-#          name: Run tests
-#          command: docker-compose run person-api-test
   assume-role-development:
     executor: docker-python
     steps:
@@ -216,11 +201,9 @@ workflows:
   check-and-deploy-development:
     jobs:
       - check-code-formatting
-#      - build-and-test
       - assume-role-development:
           context: api-assume-role-housing-development-context
           requires:
-#            - build-and-test
             - check-code-formatting
           filters:
             branches:
@@ -258,14 +241,9 @@ workflows:
   check-and-deploy-staging-and-production:
       jobs:
       - check-code-formatting
-#      - build-and-test:
-#          filters:
-#            branches:
-#              only: release
       - assume-role-staging:
           context: api-assume-role-housing-staging-context
           requires:
-#              - build-and-test
             - check-code-formatting
           filters:
              branches:
