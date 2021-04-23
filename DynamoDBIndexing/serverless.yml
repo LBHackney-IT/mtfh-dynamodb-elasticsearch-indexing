@@ -33,7 +33,7 @@ functions:
     timeout: 900
     environment:
       AWS_ECS_TASK_ARN: ${self:provider.aws_ecs_task_arn}
-      AWS_NETWORK_SUBNET: ${Fn::Select ['0', [${self:custom.vpc.${opt:stage}.subnetIds}]]}
+      AWS_NETWORK_SUBNET: ${self:custom.vpc.${opt:stage}.subnetIds}
       ECR_REPO_NAME: ${self:provider.ecr_repo_name}
       ECS_CLUSTER_NAME: ${self:provider.ecs_cluster_name}
 resources:
