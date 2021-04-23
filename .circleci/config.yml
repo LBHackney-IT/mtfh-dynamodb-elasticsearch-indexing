@@ -89,6 +89,8 @@ commands:
         type: string
     steps:
       - *attach_workspace
+      - attach_workspace:
+          at: /tmp/workspace
       - checkout
       - setup_remote_docker
       - run:
