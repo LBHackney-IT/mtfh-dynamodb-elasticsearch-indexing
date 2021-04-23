@@ -30,6 +30,7 @@ namespace DynamoDBIndexing
 
             Amazon.ECS.Model.ContainerOverride containerOverride = new Amazon.ECS.Model.ContainerOverride()
             {
+                Name = "mfth-dynamodb-elasticsearch-indexing",
                 Environment = new List<Amazon.ECS.Model.KeyValuePair>()
                             {
                                 new Amazon.ECS.Model.KeyValuePair() {Name = "DYNAMODB_TABLE", Value = input.DynamoTable},
@@ -42,7 +43,7 @@ namespace DynamoDBIndexing
             {
                 Cluster = "mfth-dynamodb-elasticsearch-indexing",
                 LaunchType = LaunchType.FARGATE,
-                TaskDefinition = "arn:aws:ecs:eu-west-2:364864573329:task-definition/mfth-dynamodb-elasticsearch-indexing-development-task:8",
+                TaskDefinition = "arn:aws:ecs:eu-west-2:364864573329:task-definition/mfth-dynamodb-elasticsearch-indexing-development-task:9",
                 Count = 1,
                 NetworkConfiguration = new Amazon.ECS.Model.NetworkConfiguration()
                 {
