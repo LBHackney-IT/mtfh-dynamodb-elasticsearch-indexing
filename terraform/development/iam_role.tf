@@ -49,6 +49,14 @@ resource "aws_iam_policy" "lambda_dynamodb_sns_policy" {
                 }
             },
             "Resource": "${aws_ecs_task_definition.app.arn}"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+              "iam:GetRole",
+              "iam:PassRole"
+            ],
+            "Resource": "${aws_iam_role.ecs_task_role.arn}"
         }
     ]
 }
