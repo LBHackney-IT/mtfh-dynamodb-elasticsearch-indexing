@@ -7,7 +7,6 @@ using DynamoDBIndexing.Domain;
 using DynamoDBIndexing.Gateways;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
-
 namespace DynamoDBIndexing
 {
     public class Function
