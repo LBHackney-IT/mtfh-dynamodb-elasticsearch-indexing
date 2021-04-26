@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.ECS;
 
-using DynamoDBIndexing.Domain;
 using DynamoDBIndexing.Gateways;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -27,11 +26,7 @@ namespace DynamoDBIndexing
 
             ECSGateway ecsGateway = new ECSGateway();
 
-            var results = await ecsGateway.ECSRunTask(input.DynamoTable, input.IndexNodeHost, input.IndexName);
-
-            var AmazonECS = new AmazonECSClient();
-
-            await Task.CompletedTask;
+            await ecsGateway.ECSRunTask(input.DynamoTable, input.IndexNodeHost, input.IndexName);
         }
     }
 }

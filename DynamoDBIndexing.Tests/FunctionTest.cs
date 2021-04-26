@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 using Xunit;
 using Amazon.Lambda.TestUtilities;
-using Amazon.Lambda.SNSEvents;
 
-using DynamoDBIndexing.Domain;
+using DynamoDBIndexing;
 
 namespace DynamoDBIndexing.Tests
 {
