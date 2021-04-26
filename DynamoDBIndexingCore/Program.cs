@@ -14,8 +14,16 @@ namespace NetCore.Docker
             string IndexNodeHost = Convert.ToString(args[1]);
             string IndexName = Convert.ToString(args[2]);
 
-            SyncPersonData syncPersonData = new SyncPersonData();
-            await syncPersonData.ExecuteSyncPersonData(DynamoTable, IndexNodeHost, IndexName);
+            if(DynamoTable == "Persons")
+            {
+                SyncPersonData syncPersonData = new SyncPersonData();
+                await syncPersonData.ExecuteSyncPersonData(DynamoTable, IndexNodeHost, IndexName);
+            }
+            else
+            {
+                Console.WriteLine("Invalid entity to sync!");
+            }
+            
 
             await Task.CompletedTask;
         }
