@@ -19,11 +19,9 @@ namespace DynamoDBIndexingCore.Gateways
             _client = new ElasticClient(settings);
         }
 
-        public IndexResponse IndexDocument(Object doc)
+        public void IndexDocument(Object doc)
         {
             var response = _client.Index(doc, idx => idx.Index(_indexName));
-
-            return response;
         }
     }
 }

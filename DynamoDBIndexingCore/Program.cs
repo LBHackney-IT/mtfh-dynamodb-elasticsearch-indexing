@@ -10,14 +10,14 @@ namespace NetCore.Docker
     {
         static async Task Main(string[] args)
         {
-            string DynamoTable = Convert.ToString(args[0]);
-            string IndexNodeHost = Convert.ToString(args[1]);
-            string IndexName = Convert.ToString(args[2]);
+            string dynamoTable = Convert.ToString(args[0]);
+            string indexNodeHost = Convert.ToString(args[1]);
+            string indexName = Convert.ToString(args[2]);
 
-            if (DynamoTable == "Persons")
+            if (dynamoTable == "Persons")
             {
                 SyncPersonData syncPersonData = new SyncPersonData();
-                await syncPersonData.ExecuteSyncPersonData(DynamoTable, IndexNodeHost, IndexName);
+                await syncPersonData.ExecuteSyncPersonData(dynamoTable, indexNodeHost, indexName);
             }
             else
             {
