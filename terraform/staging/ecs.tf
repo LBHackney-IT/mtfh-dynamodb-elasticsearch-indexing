@@ -26,6 +26,14 @@ resource "aws_ecs_task_definition" "app" {
       cpu       = 256
       memory    = 512
       essential = true
+      logConfiguration = {
+        logDriver = "awslogs"
+        options   = {
+          "awslogs-group"         = aws_cloudwatch_log_group.log_group.name,
+          "awslogs-region"        = "eu-west-2",
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
     }
   ])
 
@@ -36,3 +44,15 @@ resource "aws_ecs_task_definition" "app" {
     project_name      = var.project_name
   }
 }
+
+resource "aws_cloudwatch_log_group" "log_group" {
+  name = "/ecs/${var.ecr_repo_name}-task"
+
+  tags = {
+    Name              = var.ecr_repo_name
+    Environment       = var.environment_name
+    terraform-managed = true
+    project_name      = var.project_name
+  }
+}
+
