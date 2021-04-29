@@ -209,8 +209,7 @@ workflows:
             branches:
               only: master
       - aws-ecr/build_and_push_image:
-          context: api-assume-role-housing-development-context
-          name: build-and-push-image
+          name: build-and-push-image-development
           dockerfile: ./DynamoDBIndexingCore/Dockerfile
           path: ./DynamoDBIndexingCore
           account-url: AWS_ECR_HOST
@@ -225,14 +224,12 @@ workflows:
           requires:
             - assume-role-development
       - terraform-init-and-apply-to-development:
-          context: api-assume-role-housing-development-context
           requires:
-            - build-and-push-image
+            - build-and-push-image-development
           filters:
             branches:
               only: master
       - deploy-to-development:
-          context: api-assume-role-housing-development-context
           requires:
             - terraform-init-and-apply-to-development
           filters:
@@ -248,14 +245,28 @@ workflows:
           filters:
              branches:
                only: release
-      - terraform-init-and-apply-to-staging:
+      - aws-ecr/build_and_push_image:
+          name: build-and-push-image-staging
+          dockerfile: ./DynamoDBIndexingCore/Dockerfile
+          path: ./DynamoDBIndexingCore
+          account-url: AWS_ECR_HOST
+          repo: "mtfh-dynamodb-elasticsearch-indexing-development"
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          region: AWS_REGION
+          tag: "${CIRCLE_SHA1}"
+          filters:
+            branches:
+              only: release
           requires:
             - assume-role-staging
+      - terraform-init-and-apply-to-staging:
+          requires:
+            - build-and-push-image-staging
           filters:
             branches:
               only: release
       - deploy-to-staging:
-          context: api-assume-role-housing-staging-context
           requires:
             - terraform-init-and-apply-to-staging
           filters:
@@ -286,7 +297,6 @@ workflows:
             branches:
               only: release
       - deploy-to-production:
-          context: api-assume-role-housing-production-context
           requires:
             - permit-production-release
             - assume-role-production

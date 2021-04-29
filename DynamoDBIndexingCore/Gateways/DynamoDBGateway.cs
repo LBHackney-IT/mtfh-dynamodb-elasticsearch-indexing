@@ -7,18 +7,16 @@ namespace DynamoDBIndexingCore.Gateways
 {
     public class DynamoDBGateway
     {
-        public async IAsyncEnumerable<Document> ScanDynamoDBTable(string TableName)
+        public async IAsyncEnumerable<Document> ScanDynamoDBTable(string tableName)
         {
             AmazonDynamoDBClient _client = new AmazonDynamoDBClient();
-            Table dynamoDBTable = Table.LoadTable(_client, TableName);
+            Table dynamoDBTable = Table.LoadTable(_client, tableName);
             ScanFilter scanFilter = new ScanFilter();
             Search search = dynamoDBTable.Scan(scanFilter);
 
-            List<Document> documentList = new List<Document>();
-
             do
             {
-                documentList = await search.GetNextSetAsync();
+                List<Document> documentList = await search.GetNextSetAsync();
                 foreach (var document in documentList)
                 {
                     yield return document;

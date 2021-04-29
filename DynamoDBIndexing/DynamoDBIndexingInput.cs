@@ -1,4 +1,4 @@
-namespace DynamoDBIndexing.Domain
+namespace DynamoDBIndexing
 {
     public class DynamoDBIndexingInput
     {

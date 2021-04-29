@@ -12,15 +12,15 @@ namespace DynamoDBIndexingCore.UseCase
 {
     public class SyncPersonData
     {
-        public async Task ExecuteSyncPersonData(string TableName, string IndexNodeHost, string IndexName)
+        public async Task ExecuteSyncPersonData(string tableName, string indexNodeHost, string indexName)
         {
-            ElasticSearchGateway elasticSearchGateway = new ElasticSearchGateway(IndexNodeHost, IndexName);
+            ElasticSearchGateway elasticSearchGateway = new ElasticSearchGateway(indexNodeHost, indexName);
             DynamoDBGateway dynamoDBGateway = new DynamoDBGateway();
 
-            await foreach (Document document in dynamoDBGateway.ScanDynamoDBTable(TableName))
+            await foreach (Document document in dynamoDBGateway.ScanDynamoDBTable(tableName))
             {
                 Person TransformedPerson = document.ToDomainPerson();
-                IndexResponse response = elasticSearchGateway.IndexDocument(TransformedPerson);
+                elasticSearchGateway.IndexDocument(TransformedPerson);
             }
         }
     }
