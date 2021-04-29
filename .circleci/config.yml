@@ -209,6 +209,7 @@ workflows:
             branches:
               only: master
       - aws-ecr/build_and_push_image:
+          context: api-assume-role-housing-development-context
           name: build-and-push-image-development
           dockerfile: ./DynamoDBIndexingCore/Dockerfile
           path: ./DynamoDBIndexingCore
@@ -246,11 +247,12 @@ workflows:
              branches:
                only: release
       - aws-ecr/build_and_push_image:
+          context: api-assume-role-housing-staging-context
           name: build-and-push-image-staging
           dockerfile: ./DynamoDBIndexingCore/Dockerfile
           path: ./DynamoDBIndexingCore
           account-url: AWS_ECR_HOST
-          repo: "mtfh-dynamodb-elasticsearch-indexing-development"
+          repo: "mtfh-dynamodb-elasticsearch-indexing-staging"
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
           region: AWS_REGION
@@ -283,9 +285,25 @@ workflows:
           filters:
              branches:
                only: release
-      - terraform-init-and-apply-to-production:
+      - aws-ecr/build_and_push_image:
+          context: api-assume-role-housing-production-context
+          name: build-and-push-image-production
+          dockerfile: ./DynamoDBIndexingCore/Dockerfile
+          path: ./DynamoDBIndexingCore
+          account-url: AWS_ECR_HOST
+          repo: "mtfh-dynamodb-elasticsearch-indexing-production"
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          region: AWS_REGION
+          tag: "${CIRCLE_SHA1}"
+          filters:
+            branches:
+              only: release
           requires:
             - assume-role-production
+      - terraform-init-and-apply-to-production:
+          requires:
+            - build-and-push-image-production
           filters:
             branches:
               only: release
