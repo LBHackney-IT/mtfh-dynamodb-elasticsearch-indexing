@@ -26,6 +26,14 @@ resource "aws_ecs_task_definition" "app" {
       cpu       = 256
       memory    = 512
       essential = true
+      logConfiguration = {
+        logDriver = "awslogs"
+        options   = {
+          "awslogs-group"         = "/ecs/${var.ecr_repo_name}-task",
+          "awslogs-region"        = "eu-west-2",
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
     }
   ])
 
