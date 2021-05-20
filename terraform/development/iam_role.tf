@@ -48,7 +48,7 @@ resource "aws_iam_policy" "lambda_dynamodb_sns_policy" {
                     "ecs:cluster": "${aws_ecs_cluster.cluster.arn}"
                 }
             },
-            "Resource": "${aws_ecs_task_definition.app.arn}"
+            "Resource": "arn:aws:ecs:eu-west-2:364864573329:task-definition/mtfh-dynamodb-elasticsearch-indexing-development-task:15"
         },
         {
             "Effect": "Allow",
