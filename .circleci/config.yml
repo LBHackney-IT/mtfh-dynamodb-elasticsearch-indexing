@@ -151,7 +151,7 @@ jobs:
       - terraform-init-then-apply:
           environment_name: "development"
           ecs_cluster_name: $ECS_CLUSTER_NAME
-          ecr_host: $AWS_ECR_HOST
+          ecr_host: $AWS_ECR_HOST_DEV
           ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-development"
           ecr_image_sha1: "${CIRCLE_SHA1}"
   terraform-init-and-apply-to-staging:
@@ -160,7 +160,7 @@ jobs:
       - terraform-init-then-apply:
           environment_name: "staging"
           ecs_cluster_name: $ECS_CLUSTER_NAME
-          ecr_host: $AWS_ECR_HOST
+          ecr_host: $AWS_ECR_HOST_STAGING
           ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-staging"
           ecr_image_sha1: "${CIRCLE_SHA1}"
   terraform-init-and-apply-to-production:
@@ -169,7 +169,7 @@ jobs:
       - terraform-init-then-apply:
           environment_name: "production"
           ecs_cluster_name: $ECS_CLUSTER_NAME
-          ecr_host: $AWS_ECR_HOST
+          ecr_host: $AWS_ECR_HOST_PRODUCTION
           ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-production"
           ecr_image_sha1: "${CIRCLE_SHA1}"
   deploy-to-development:
@@ -213,7 +213,7 @@ workflows:
           name: build-and-push-image-development
           dockerfile: ./DynamoDBIndexingCore/Dockerfile
           path: ./DynamoDBIndexingCore
-          account-url: AWS_ECR_HOST
+          account-url: AWS_ECR_HOST_DEV
           repo: "mtfh-dynamodb-elasticsearch-indexing-development"
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
@@ -251,7 +251,7 @@ workflows:
           name: build-and-push-image-staging
           dockerfile: ./DynamoDBIndexingCore/Dockerfile
           path: ./DynamoDBIndexingCore
-          account-url: AWS_ECR_HOST
+          account-url: AWS_ECR_HOST_STAGING
           repo: "mtfh-dynamodb-elasticsearch-indexing-staging"
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
@@ -290,7 +290,7 @@ workflows:
           name: build-and-push-image-production
           dockerfile: ./DynamoDBIndexingCore/Dockerfile
           path: ./DynamoDBIndexingCore
-          account-url: AWS_ECR_HOST
+          account-url: AWS_ECR_HOST_PRODUCTION
           repo: "mtfh-dynamodb-elasticsearch-indexing-production"
           aws-access-key-id: AWS_ACCESS_KEY_ID
           aws-secret-access-key: AWS_SECRET_ACCESS_KEY
