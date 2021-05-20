@@ -45,11 +45,7 @@ commands:
         type: string
       ecs_cluster_name:
         type: string
-      ecr_host:
-        type: string
       ecr_repo_name:
-        type: string
-      ecr_image_sha1:
         type: string
     steps:
       - *attach_workspace
@@ -65,19 +61,49 @@ commands:
           command: |
             export TF_VAR_environment_name=<<parameters.environment_name>>
             export TF_VAR_ecs_cluster_name=<<parameters.ecs_cluster_name>>
+            export TF_VAR_ecr_repo_name=<<parameters.ecr_repo_name>>
+            cd ./terraform/<<parameters.environment_name>>/
+            terraform apply -auto-approve
+  terraform-deploy-ecs-task:
+    description: "Deploy ECS task using terraform."
+    parameters:
+      environment_name:
+        type: string
+      ecs_cluster_name:
+        type: string
+      ecr_host:
+        type: string
+      ecr_repo_name:
+        type: string
+      ecr_image_sha1:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          command: |
+            cd ./terraform/<<parameters.environment_name>>-ecs-task/
+            terraform get -update=true
+            terraform init
+          name: get and init
+      - run:
+          name: apply
+          command: |
+            export TF_VAR_environment_name=<<parameters.environment_name>>
+            export TF_VAR_ecs_cluster_name=<<parameters.ecs_cluster_name>>
             export TF_VAR_ecr_host=<<parameters.ecr_host>>
             export TF_VAR_ecr_repo_name=<<parameters.ecr_repo_name>>
             export TF_VAR_ecr_image_sha1=<<parameters.ecr_image_sha1>>
-            cd ./terraform/<<parameters.environment_name>>/
+            cd ./terraform/<<parameters.environment_name>>-ecs-task/
             terraform apply -auto-approve
       - run:
           name: output
           command: |
-            cd ./terraform/<<parameters.environment_name>>/
+            cd ./terraform/<<parameters.environment_name>>-ecs-task/
             mkdir -p workspace
             terraform output -raw aws_ecs_task_arn > workspace/aws_ecs_task_arn
       - persist_to_workspace:
-          root: ./terraform/<<parameters.environment_name>>/workspace
+          root: ./terraform/<<parameters.environment_name>>-ecs-task/workspace
           paths:
             - aws_ecs_task_arn
   deploy-lambda:
@@ -151,22 +177,43 @@ jobs:
       - terraform-init-then-apply:
           environment_name: "development"
           ecs_cluster_name: $ECS_CLUSTER_NAME
-          ecr_host: $AWS_ECR_HOST_DEV
           ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-development"
-          ecr_image_sha1: "${CIRCLE_SHA1}"
   terraform-init-and-apply-to-staging:
     executor: docker-terraform
     steps:
       - terraform-init-then-apply:
           environment_name: "staging"
           ecs_cluster_name: $ECS_CLUSTER_NAME
-          ecr_host: $AWS_ECR_HOST_STAGING
           ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-staging"
-          ecr_image_sha1: "${CIRCLE_SHA1}"
   terraform-init-and-apply-to-production:
     executor: docker-terraform
     steps:
       - terraform-init-then-apply:
+          environment_name: "production"
+          ecs_cluster_name: $ECS_CLUSTER_NAME
+          ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-production"
+  terraform-deploy-ecs-task-to-development:
+    executor: docker-terraform
+    steps:
+      - terraform-deploy-ecs-task:
+          environment_name: "development"
+          ecs_cluster_name: $ECS_CLUSTER_NAME
+          ecr_host: $AWS_ECR_HOST_DEV
+          ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-development"
+          ecr_image_sha1: "${CIRCLE_SHA1}"
+  terraform-deploy-ecs-task-to-staging:
+    executor: docker-terraform
+    steps:
+      - terraform-deploy-ecs-task:
+          environment_name: "staging"
+          ecs_cluster_name: $ECS_CLUSTER_NAME
+          ecr_host: $AWS_ECR_HOST_STAGING
+          ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-staging"
+          ecr_image_sha1: "${CIRCLE_SHA1}"
+  terraform-deploy-ecs-task-to-production:
+    executor: docker-terraform
+    steps:
+      - terraform-deploy-ecs-task:
           environment_name: "production"
           ecs_cluster_name: $ECS_CLUSTER_NAME
           ecr_host: $AWS_ECR_HOST_PRODUCTION
@@ -208,6 +255,12 @@ workflows:
           filters:
             branches:
               only: master
+      - terraform-init-and-apply-to-development:
+          requires:
+            - assume-role-development
+          filters:
+            branches:
+              only: master
       - aws-ecr/build_and_push_image:
           context: api-assume-role-housing-development-context
           name: build-and-push-image-development
@@ -223,8 +276,8 @@ workflows:
             branches:
               only: master
           requires:
-            - assume-role-development
-      - terraform-init-and-apply-to-development:
+            - terraform-init-and-apply-to-development
+      - terraform-deploy-ecs-task-to-development:
           requires:
             - build-and-push-image-development
           filters:
@@ -232,7 +285,7 @@ workflows:
               only: master
       - deploy-to-development:
           requires:
-            - terraform-init-and-apply-to-development
+            - terraform-deploy-ecs-task-to-development
           filters:
             branches:
               only: master
@@ -246,6 +299,12 @@ workflows:
           filters:
              branches:
                only: release
+      - terraform-init-and-apply-to-staging:
+          requires:
+            - assume-role-staging
+          filters:
+            branches:
+              only: release
       - aws-ecr/build_and_push_image:
           context: api-assume-role-housing-staging-context
           name: build-and-push-image-staging
@@ -261,8 +320,8 @@ workflows:
             branches:
               only: release
           requires:
-            - assume-role-staging
-      - terraform-init-and-apply-to-staging:
+            - terraform-init-and-apply-to-staging
+      - terraform-deploy-ecs-task-to-staging:
           requires:
             - build-and-push-image-staging
           filters:
@@ -270,7 +329,7 @@ workflows:
               only: release
       - deploy-to-staging:
           requires:
-            - terraform-init-and-apply-to-staging
+            - terraform-deploy-ecs-task-to-staging
           filters:
             branches:
               only: release
@@ -285,6 +344,12 @@ workflows:
           filters:
              branches:
                only: release
+      - terraform-init-and-apply-to-production:
+          requires:
+            - assume-role-production
+          filters:
+            branches:
+              only: release
       - aws-ecr/build_and_push_image:
           context: api-assume-role-housing-production-context
           name: build-and-push-image-production
@@ -300,13 +365,7 @@ workflows:
             branches:
               only: release
           requires:
-            - assume-role-production
-      - terraform-init-and-apply-to-production:
-          requires:
-            - build-and-push-image-production
-          filters:
-            branches:
-              only: release
+            - terraform-init-and-apply-to-production
       - permit-production-release:
           type: approval
           requires:
@@ -314,10 +373,17 @@ workflows:
           filters:
             branches:
               only: release
+      - terraform-deploy-ecs-task-to-production:
+          requires:
+            - permit-production-release
+            - build-and-push-image-production
+          filters:
+            branches:
+              only: release
       - deploy-to-production:
           requires:
             - permit-production-release
-            - assume-role-production
+            - terraform-deploy-ecs-task-to-production
           filters:
             branches:
               only: release

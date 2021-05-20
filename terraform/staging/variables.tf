@@ -13,14 +13,6 @@ variable "ecs_cluster_name" {
     default = "mfth-dynamodb-elasticsearch-indexing"
 }
 
-variable "ecr_host" {
-    type = string
-}
-
 variable "ecr_repo_name" {
-    type = string
-}
-
-variable "ecr_image_sha1" {
     type = string
 }
