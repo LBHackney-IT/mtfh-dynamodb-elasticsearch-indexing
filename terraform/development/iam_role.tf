@@ -49,14 +49,6 @@ resource "aws_iam_policy" "lambda_dynamodb_sns_policy" {
                 }
             },
             "Resource": "arn:aws:ecs:eu-west-2:364864573329:task-definition/mtfh-dynamodb-elasticsearch-indexing-development-task:15"
-        },
-        {
-            "Effect": "Allow",
-            "Action": [
-              "iam:GetRole",
-              "iam:PassRole"
-            ],
-            "Resource": "${aws_iam_role.ecs_task_role.arn}"
         }
     ]
 }
