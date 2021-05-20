@@ -29,7 +29,7 @@ namespace DynamoDBIndexingCore.Factories
                 StartDate = getStringDynamoEntry(databaseEntity, "startDate"),
                 EndDate = getStringDynamoEntry(databaseEntity, "endDate"),
                 AssetFullAddress = getStringDynamoEntry(databaseEntity, "assetFullAddress"),
-                AssetLlpgRef = getStringDynamoEntry(databaseEntity, "assetLlpgRef"),
+                Uprn = getStringDynamoEntry(databaseEntity, "uprn"),
                 AssetId = getStringDynamoEntry(databaseEntity, "assetId")
             };
         }
