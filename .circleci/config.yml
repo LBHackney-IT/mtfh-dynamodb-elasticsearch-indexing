@@ -209,7 +209,7 @@ workflows:
             branches:
               only: master
       - aws-ecr/build_and_push_image:
-          context: api-assume-role-housing-development-context
+          # context: api-assume-role-housing-development-context
           name: build-and-push-image-development
           dockerfile: ./DynamoDBIndexingCore/Dockerfile
           path: ./DynamoDBIndexingCore
