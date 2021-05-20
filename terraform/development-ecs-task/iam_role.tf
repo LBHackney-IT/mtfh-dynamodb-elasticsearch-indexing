@@ -70,29 +70,29 @@
 #   }
 # }
 
-# data "aws_iam_policy_document" "assume_role_policy" {
-#   statement {
-#     actions = ["sts:AssumeRole"]
+data "aws_iam_policy_document" "assume_role_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
 
-#     principals {
-#       type        = "Service"
-#       identifiers = ["ecs-tasks.amazonaws.com"]
-#     }
-#   }
-# }
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
 
-# resource "aws_iam_role" "ecs_task_role" {
-#   name               = "dynamodb-elasticsearch-indexing-ecs-task-execution"
-#   path               = "/mtfh-dynamodb-elasticsearch-indexing/"
-#   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+resource "aws_iam_role" "ecs_task_role" {
+  name               = "dynamodb-elasticsearch-indexing-ecs-task-execution"
+  path               = "/mtfh-dynamodb-elasticsearch-indexing/"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 
-#   tags = {
-#     Name              = "mtfh-dynamodb-elasticsearch-indexing-${var.environment_name}"
-#     Environment       = var.environment_name
-#     terraform-managed = true
-#     project_name      = var.project_name
-#   }
-# }
+  tags = {
+    Name              = "mtfh-dynamodb-elasticsearch-indexing-${var.environment_name}"
+    Environment       = var.environment_name
+    terraform-managed = true
+    project_name      = var.project_name
+  }
+}
 
 # resource "aws_iam_role_policy_attachment" "ecs-task-default" {
 #   role       = aws_iam_role.ecs_task_role.name
