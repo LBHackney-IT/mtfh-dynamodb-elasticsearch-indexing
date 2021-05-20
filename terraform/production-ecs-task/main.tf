@@ -27,6 +27,6 @@ terraform {
     bucket  = "terraform-state-housing-production"
     encrypt = true
     region  = "eu-west-2"
-    key     = "services/mtfh-dynamodb-elasticsearch-indexing/state"
+    key     = "services/mtfh-dynamodb-elasticsearch-indexing-ecs/state"
   }
 }
