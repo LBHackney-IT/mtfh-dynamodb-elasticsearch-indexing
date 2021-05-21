@@ -353,8 +353,8 @@ workflows:
       - aws-ecr/build_and_push_image:
           context: api-assume-role-housing-production-context
           name: build-and-push-image-production
-          dockerfile: ./DynamoDBIndexingCore/Dockerfile
           path: ./DynamoDBIndexingCore
+          dockerfile: ./DynamoDBIndexingCore/Dockerfile
           account-url: AWS_ECR_HOST_PRODUCTION
           repo: "mtfh-dynamodb-elasticsearch-indexing-production"
           aws-access-key-id: AWS_ACCESS_KEY_ID
