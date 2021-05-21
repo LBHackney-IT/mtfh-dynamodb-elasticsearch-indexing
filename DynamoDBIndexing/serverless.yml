@@ -62,6 +62,12 @@ resources:
               Action: sts:AssumeRole
         ManagedPolicyArns:
           - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+          - 'Fn::Join':
+              - ':'
+              - - 'arn:aws:iam'
+                - ''
+                - Ref: 'AWS::AccountId'
+                - 'policy/mtfh-dynamodb-elasticsearch-indexing/lambda-dynamodb-elasticsearch-indexing'
           - arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess
         Policies:
           - PolicyName: manageLogs
