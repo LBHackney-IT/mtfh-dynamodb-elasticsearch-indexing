@@ -245,9 +245,9 @@ jobs:
       - ecr-build-and-push-image:
           dockerfile: ./DynamoDBIndexingCore/Dockerfile
           path: ./DynamoDBIndexingCore
-          account-url: $AWS_ECR_HOST_DEV
+          account-url: "${AWS_ECR_HOST_DEV}"
           repo: "mtfh-dynamodb-elasticsearch-indexing-development"
-          region: $AWS_REGION
+          region: "${AWS_REGION}"
           tag: "${CIRCLE_SHA1}"
   terraform-deploy-ecs-task-to-development:
     executor: docker-terraform
