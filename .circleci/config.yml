@@ -57,11 +57,14 @@ commands:
       tag:
         type: string
     steps:
-      - *attach_workspace
       - run:
           command: |
             ls -ahl /home/circleci/project
       - checkout
+      - *attach_workspace
+      - run:
+          command: |
+            ls -ahl /home/circleci/project
       - run:
           command: |
             aws ecr get-login-password --region $<<parameters.region>> --profile <<parameters.profile-name>> | docker login --username AWS --password-stdin $<<parameters.account-url>>
