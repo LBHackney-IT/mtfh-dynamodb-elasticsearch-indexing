@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   aws-ecr: circleci/aws-ecr@3.0.0
-  aws-cli: circleci/aws-cli@0.1.9
+  aws-cli: circleci/aws-cli@2.0.2
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
 
 executors:
@@ -38,6 +38,55 @@ commands:
           root: *workspace_root
           paths:
             - .aws
+  ecr-build-and-push-image:
+    description: "Build and push docker image to ECR"
+    parameters:
+      account-url:
+        type: env_var_name
+      profile-name:
+        default: default
+        type: string
+      region:
+        type: env_var_name
+      dockerfile:
+        type: string
+      path:
+        type: string
+      repo:
+        type: string
+      tag:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - aws-cli/install
+      - setup_remote_docker:
+          version: 19.03.13
+      - run:
+          command: |
+            aws ecr get-login-password --region $<<parameters.region>> --profile <<parameters.profile-name>> | docker login --username AWS --password-stdin $<<parameters.account-url>>
+          name: Log into Amazon ECR
+      - run:
+          command: |
+            registry_id=$(echo $<<parameters.account-url>> | sed "s;\..*;;g")
+            number_of_tags_in_ecr=0
+            docker_tag_args=""
+            IFS="," read -ra DOCKER_TAGS \<<< "<< parameters.tag >>"
+            for tag in "${DOCKER_TAGS[@]}"; do
+              docker_tag_args="$docker_tag_args -t $<<parameters.account-url>>/<<parameters.repo>>:$tag"
+            done
+            docker build \
+              -f <<parameters.dockerfile>> \
+              $docker_tag_args \
+              <<parameters.path>>
+          name: Build docker image
+      - run:
+          command: |
+            IFS="," read -ra DOCKER_TAGS \<<< "<< parameters.tag >>"
+            for tag in "${DOCKER_TAGS[@]}"; do
+              docker push $<<parameters.account-url>>/<<parameters.repo>>:${tag}
+            done
+          name: Push image to Amazon ECR
   terraform-init-then-apply:
     description: "Initializes and applies terraform configuration"
     parameters:
@@ -192,6 +241,36 @@ jobs:
           environment_name: "production"
           ecs_cluster_name: $ECS_CLUSTER_NAME
           ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-production"
+  ecr-build-and-push-image-development:
+    executor: docker-python
+    steps:
+      - ecr-build-and-push-image:
+          dockerfile: ./DynamoDBIndexingCore/Dockerfile
+          path: ./DynamoDBIndexingCore
+          account-url: AWS_ECR_HOST_DEV
+          repo: "mtfh-dynamodb-elasticsearch-indexing-development"
+          region: AWS_REGION
+          tag: "${CIRCLE_SHA1}"
+  ecr-build-and-push-image-staging:
+    executor: docker-python
+    steps:
+      - ecr-build-and-push-image:
+          dockerfile: ./DynamoDBIndexingCore/Dockerfile
+          path: ./DynamoDBIndexingCore
+          account-url: AWS_ECR_HOST_STAGING
+          repo: "mtfh-dynamodb-elasticsearch-indexing-staging"
+          region: AWS_REGION
+          tag: "${CIRCLE_SHA1}"
+  ecr-build-and-push-image-production:
+    executor: docker-python
+    steps:
+      - ecr-build-and-push-image:
+          dockerfile: ./DynamoDBIndexingCore/Dockerfile
+          path: ./DynamoDBIndexingCore
+          account-url: AWS_ECR_HOST_PRODUCTION
+          repo: "mtfh-dynamodb-elasticsearch-indexing-production"
+          region: AWS_REGION
+          tag: "${CIRCLE_SHA1}"
   terraform-deploy-ecs-task-to-development:
     executor: docker-terraform
     steps:
@@ -261,25 +340,15 @@ workflows:
           filters:
             branches:
               only: master
-      - aws-ecr/build_and_push_image:
-          context: api-assume-role-housing-development-context
-          name: build-and-push-image-development
-          dockerfile: ./DynamoDBIndexingCore/Dockerfile
-          path: ./DynamoDBIndexingCore
-          account-url: AWS_ECR_HOST_DEV
-          repo: "mtfh-dynamodb-elasticsearch-indexing-development"
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          region: AWS_REGION
-          tag: "${CIRCLE_SHA1}"
+      - ecr-build-and-push-image-development:
+          requires:
+            - terraform-init-and-apply-to-development
           filters:
             branches:
               only: master
-          requires:
-            - terraform-init-and-apply-to-development
       - terraform-deploy-ecs-task-to-development:
           requires:
-            - build-and-push-image-development
+            - ecr-build-and-push-image-development
           filters:
             branches:
               only: master
@@ -305,25 +374,15 @@ workflows:
           filters:
             branches:
               only: release
-      - aws-ecr/build_and_push_image:
-          context: api-assume-role-housing-staging-context
-          name: build-and-push-image-staging
-          dockerfile: ./DynamoDBIndexingCore/Dockerfile
-          path: ./DynamoDBIndexingCore
-          account-url: AWS_ECR_HOST_STAGING
-          repo: "mtfh-dynamodb-elasticsearch-indexing-staging"
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          region: AWS_REGION
-          tag: "${CIRCLE_SHA1}"
+      - ecr-build-and-push-image-staging:
+          requires:
+            - terraform-init-and-apply-to-staging
           filters:
             branches:
               only: release
-          requires:
-            - terraform-init-and-apply-to-staging
       - terraform-deploy-ecs-task-to-staging:
           requires:
-            - build-and-push-image-staging
+            - ecr-build-and-push-image-staging
           filters:
             branches:
               only: release
@@ -350,33 +409,24 @@ workflows:
           filters:
             branches:
               only: release
-      - aws-ecr/build_and_push_image:
-          context: api-assume-role-housing-production-context
-          name: build-and-push-image-production
-          path: ./DynamoDBIndexingCore
-          dockerfile: ./DynamoDBIndexingCore/Dockerfile
-          account-url: AWS_ECR_HOST_PRODUCTION
-          repo: "mtfh-dynamodb-elasticsearch-indexing-production"
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          region: AWS_REGION
-          tag: "${CIRCLE_SHA1}"
+      - ecr-build-and-push-image-production:
+          requires:
+            - terraform-init-and-apply-to-production
           filters:
             branches:
               only: release
-          requires:
-            - terraform-init-and-apply-to-production
       - permit-production-release:
           type: approval
           requires:
             - deploy-to-staging
+            - ecr-build-and-push-image-production
           filters:
             branches:
               only: release
       - terraform-deploy-ecs-task-to-production:
           requires:
             - permit-production-release
-            - build-and-push-image-production
+            - ecr-build-and-push-image-production
           filters:
             branches:
               only: release
