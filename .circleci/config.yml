@@ -42,12 +42,12 @@ commands:
     description: "Build and push docker image to ECR"
     parameters:
       account-url:
-        type: string
+        type: env_var_name
       profile-name:
         default: default
         type: string
       region:
-        type: string
+        type: env_var_name
       dockerfile:
         type: string
       path:
@@ -61,16 +61,16 @@ commands:
       # - checkout
       - run:
           command: |
-            aws ecr get-login-password --region <<parameters.region>> --profile <<parameters.profile-name>> | docker login --username AWS --password-stdin <<parameters.account-url>>
+            aws ecr get-login-password --region $<<parameters.region>> --profile <<parameters.profile-name>> | docker login --username AWS --password-stdin <<parameters.account-url>>
           name: Log into Amazon ECR
       - run:
           command: |
-            registry_id=$(echo <<parameters.account-url>> | sed "s;\..*;;g")
+            registry_id=$(echo $<<parameters.account-url>> | sed "s;\..*;;g")
             number_of_tags_in_ecr=0
             docker_tag_args=""
             IFS="," read -ra DOCKER_TAGS \<<< "<< parameters.tag >>"
             for tag in "${DOCKER_TAGS[@]}"; do
-              docker_tag_args="$docker_tag_args -t <<parameters.account-url>>/<<parameters.repo>>:$tag"
+              docker_tag_args="$docker_tag_args -t $<<parameters.account-url>>/<<parameters.repo>>:$tag"
             done
             docker build \
               -f <<parameters.path>>/<<parameters.dockerfile>> \
@@ -81,7 +81,7 @@ commands:
           command: |
             IFS="," read -ra DOCKER_TAGS \<<< "<< parameters.tag >>"
             for tag in "${DOCKER_TAGS[@]}"; do
-              docker push <<parameters.account-url>>/<<parameters.repo>>:${tag}
+              docker push $<<parameters.account-url>>/<<parameters.repo>>:${tag}
             done
           name: Push image to Amazon ECR
   terraform-init-then-apply:
@@ -241,13 +241,13 @@ jobs:
   ecr-build-and-push-image-development:
     executor: docker-python
     steps:
-      # - aws-cli/install
+      - aws-cli/install
       - ecr-build-and-push-image:
           dockerfile: ./DynamoDBIndexingCore/Dockerfile
           path: ./DynamoDBIndexingCore
-          account-url: "${AWS_ECR_HOST_DEV}"
+          account-url: AWS_ECR_HOST_DEV
           repo: "mtfh-dynamodb-elasticsearch-indexing-development"
-          region: "${AWS_REGION}"
+          region: AWS_REGION
           tag: "${CIRCLE_SHA1}"
   terraform-deploy-ecs-task-to-development:
     executor: docker-terraform
