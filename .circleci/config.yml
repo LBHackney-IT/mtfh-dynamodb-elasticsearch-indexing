@@ -241,7 +241,7 @@ jobs:
   ecr-build-and-push-image-development:
     executor: docker-python
     steps:
-      - aws-cli/install
+      # - aws-cli/install
       - ecr-build-and-push-image:
           dockerfile: ./DynamoDBIndexingCore/Dockerfile
           path: ./DynamoDBIndexingCore
