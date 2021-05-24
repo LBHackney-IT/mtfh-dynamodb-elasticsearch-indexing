@@ -9,6 +9,9 @@ executors:
   docker-python:
     docker:
       - image: circleci/python:3.7
+  docker-ecr:
+    docker:
+      - image: circleci/python:3.7
   docker-terraform:
     docker:
       - image: "hashicorp/terraform:light"
@@ -58,7 +61,7 @@ commands:
         type: string
     steps:
       - *attach_workspace
-      # - checkout
+      - checkout
       - run:
           command: |
             aws ecr get-login-password --region $<<parameters.region>> --profile <<parameters.profile-name>> | docker login --username AWS --password-stdin $<<parameters.account-url>>
@@ -73,7 +76,7 @@ commands:
               docker_tag_args="$docker_tag_args -t $<<parameters.account-url>>/<<parameters.repo>>:$tag"
             done
             docker build \
-              -f <<parameters.path>>/<<parameters.dockerfile>> \
+              -f <<parameters.dockerfile>> \
               $docker_tag_args \
               <<parameters.path>>
           name: Build docker image
@@ -239,7 +242,7 @@ jobs:
           ecs_cluster_name: $ECS_CLUSTER_NAME
           ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-production"
   ecr-build-and-push-image-development:
-    executor: docker-python
+    executor: docker-ecr
     steps:
       - aws-cli/install
       - ecr-build-and-push-image:
