@@ -58,6 +58,8 @@ commands:
         type: string
     steps:
       - checkout
+      - aws-cli/setup:
+          profile-name: default
       - run:
           command: >
             aws ecr get-login-password --region $<<parameters.region>> --profile <<parameters.profile-name>> | docker login --username AWS --password-stdin $<<parameters.account-url>>
