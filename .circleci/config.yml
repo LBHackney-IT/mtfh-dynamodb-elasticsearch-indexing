@@ -58,13 +58,13 @@ commands:
         type: string
     steps:
       - *attach_workspace
-      - checkout
+      # - checkout
       - run:
-          command: >
+          command: |
             aws ecr get-login-password --region $<<parameters.region>> --profile <<parameters.profile-name>> | docker login --username AWS --password-stdin $<<parameters.account-url>>
           name: Log into Amazon ECR
       - run:
-          command: >
+          command: |
             registry_id=$(echo $<<parameters.account-url>> | sed "s;\..*;;g")
             number_of_tags_in_ecr=0
             docker_tag_args=""
