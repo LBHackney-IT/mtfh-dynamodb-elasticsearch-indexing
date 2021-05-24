@@ -251,6 +251,26 @@ jobs:
           repo: "mtfh-dynamodb-elasticsearch-indexing-development"
           region: AWS_REGION
           tag: "${CIRCLE_SHA1}"
+  ecr-build-and-push-image-staging:
+    executor: docker-python
+    steps:
+      - ecr-build-and-push-image:
+          dockerfile: ./DynamoDBIndexingCore/Dockerfile
+          path: ./DynamoDBIndexingCore
+          account-url: AWS_ECR_HOST_STAGING
+          repo: "mtfh-dynamodb-elasticsearch-indexing-staging"
+          region: AWS_REGION
+          tag: "${CIRCLE_SHA1}"
+  ecr-build-and-push-image-production:
+    executor: docker-python
+    steps:
+      - ecr-build-and-push-image:
+          dockerfile: ./DynamoDBIndexingCore/Dockerfile
+          path: ./DynamoDBIndexingCore
+          account-url: AWS_ECR_HOST_PRODUCTION
+          repo: "mtfh-dynamodb-elasticsearch-indexing-production"
+          region: AWS_REGION
+          tag: "${CIRCLE_SHA1}"
   terraform-deploy-ecs-task-to-development:
     executor: docker-terraform
     steps:
@@ -320,22 +340,6 @@ workflows:
           filters:
             branches:
               only: master
-      # - aws-ecr/build_and_push_image:
-      #     context: api-assume-role-housing-development-context
-      #     name: build-and-push-image-development
-      #     dockerfile: ./DynamoDBIndexingCore/Dockerfile
-      #     path: ./DynamoDBIndexingCore
-      #     account-url: AWS_ECR_HOST_DEV
-      #     repo: "mtfh-dynamodb-elasticsearch-indexing-development"
-      #     aws-access-key-id: AWS_ACCESS_KEY_ID
-      #     aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-      #     region: AWS_REGION
-      #     tag: "${CIRCLE_SHA1}"
-      #     filters:
-      #       branches:
-      #         only: master
-      #     requires:
-      #       - terraform-init-and-apply-to-development
       - ecr-build-and-push-image-development:
           requires:
             - terraform-init-and-apply-to-development
@@ -370,25 +374,15 @@ workflows:
           filters:
             branches:
               only: release
-      - aws-ecr/build_and_push_image:
-          context: api-assume-role-housing-staging-context
-          name: build-and-push-image-staging
-          dockerfile: ./DynamoDBIndexingCore/Dockerfile
-          path: ./DynamoDBIndexingCore
-          account-url: AWS_ECR_HOST_STAGING
-          repo: "mtfh-dynamodb-elasticsearch-indexing-staging"
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          region: AWS_REGION
-          tag: "${CIRCLE_SHA1}"
+      - ecr-build-and-push-image-staging:
+          requires:
+            - terraform-init-and-apply-to-staging
           filters:
             branches:
               only: release
-          requires:
-            - terraform-init-and-apply-to-staging
       - terraform-deploy-ecs-task-to-staging:
           requires:
-            - build-and-push-image-staging
+            - ecr-build-and-push-image-staging
           filters:
             branches:
               only: release
@@ -415,33 +409,24 @@ workflows:
           filters:
             branches:
               only: release
-      - aws-ecr/build_and_push_image:
-          context: api-assume-role-housing-production-context
-          name: build-and-push-image-production
-          path: ./DynamoDBIndexingCore
-          dockerfile: ./DynamoDBIndexingCore/Dockerfile
-          account-url: AWS_ECR_HOST_PRODUCTION
-          repo: "mtfh-dynamodb-elasticsearch-indexing-production"
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          region: AWS_REGION
-          tag: "${CIRCLE_SHA1}"
+      - ecr-build-and-push-image-production:
+          requires:
+            - terraform-init-and-apply-to-production
           filters:
             branches:
               only: release
-          requires:
-            - terraform-init-and-apply-to-production
       - permit-production-release:
           type: approval
           requires:
             - deploy-to-staging
+            - ecr-build-and-push-image-production
           filters:
             branches:
               only: release
       - terraform-deploy-ecs-task-to-production:
           requires:
             - permit-production-release
-            - build-and-push-image-production
+            - ecr-build-and-push-image-production
           filters:
             branches:
               only: release
