@@ -238,7 +238,7 @@ jobs:
           ecs_cluster_name: $ECS_CLUSTER_NAME
           ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-production"
   ecr-build-and-push-image-development:
-    executor: docker-python
+    executor: aws-cli/default
     steps:
       - ecr-build-and-push-image:
           dockerfile: ./DynamoDBIndexingCore/Dockerfile
