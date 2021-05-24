@@ -57,14 +57,9 @@ commands:
       tag:
         type: string
     steps:
-      - run:
-          command: |
-            ls -ahl /home/circleci/project
-      - checkout
       - *attach_workspace
-      - run:
-          command: |
-            ls -ahl /home/circleci/project
+      - checkout
+      - aws-cli/install
       - run:
           command: |
             aws ecr get-login-password --region $<<parameters.region>> --profile <<parameters.profile-name>> | docker login --username AWS --password-stdin $<<parameters.account-url>>
@@ -247,7 +242,6 @@ jobs:
   ecr-build-and-push-image-development:
     executor: docker-python
     steps:
-      - aws-cli/install
       - ecr-build-and-push-image:
           dockerfile: ./DynamoDBIndexingCore/Dockerfile
           path: ./DynamoDBIndexingCore
