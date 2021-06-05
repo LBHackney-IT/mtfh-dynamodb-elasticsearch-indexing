@@ -37,20 +37,20 @@ namespace DynamoDBIndexingCore.Factories
         {
             return new Person
             {
-                Id = getValueDynamoEntry(databaseEntity, "id"),
-                Title = getValueDynamoEntry(databaseEntity, "title"),
-                PreferredTitle = getValueDynamoEntry(databaseEntity, "preferredTitle"),
-                PreferredFirstname = getValueDynamoEntry(databaseEntity, "preferredFirstname"),
-                PreferredMiddleName = getValueDynamoEntry(databaseEntity, "preferredMiddleName"),
-                PreferredSurname = getValueDynamoEntry(databaseEntity, "preferredSurname"),
-                Firstname = getValueDynamoEntry(databaseEntity, "firstname"),
-                MiddleName = getValueDynamoEntry(databaseEntity, "middleName"),
-                Surname = getValueDynamoEntry(databaseEntity, "surname"),
-                DateOfBirth = getValueDynamoEntry(databaseEntity, "dateOfBirth"),
-                NationalInsuranceNo = getValueDynamoEntry(databaseEntity, "nationalInsuranceNo"),
-                Identifications = ((List<Document>) getValueDynamoEntry(databaseEntity, "identifications")).Select(p => p.ToDomainIdentification()),
-                Tenures = ((List<Document>) getValueDynamoEntry(databaseEntity, "tenures")).Select(p => p.ToDomainTenure()),
-                PersonTypes = (List<String>) getValueDynamoEntry(databaseEntity, "personTypes")
+                Id = databaseEntity["id"],
+                Title = databaseEntity.Contains("title") ? databaseEntity["title"] : null,
+                PreferredTitle = databaseEntity.Contains("preferredTitle") ? databaseEntity["preferredTitle"] : null,
+                PreferredFirstname = databaseEntity.Contains("preferredFirstname") ? databaseEntity["preferredFirstname"] : null,
+                PreferredMiddleName = databaseEntity.Contains("preferredMiddleName") ? databaseEntity["preferredMiddleName"] : null,
+                PreferredSurname = databaseEntity.Contains("preferredSurname") ? databaseEntity["preferredSurname"] : null,
+                Firstname = databaseEntity["firstname"],
+                MiddleName = databaseEntity.Contains("middleName") ? databaseEntity["middleName"] : null,
+                Surname = databaseEntity["surname"],
+                DateOfBirth = databaseEntity.Contains("dateOfBirth") ? databaseEntity["dateOfBirth"] : null,
+                NationalInsuranceNo = databaseEntity.Contains("nationalInsuranceNo") ? databaseEntity["nationalInsuranceNo"] : null,
+                Identifications = ((List<Document>) (databaseEntity.Contains("identifications") ? databaseEntity["identifications"] : null)).Select(p => p.ToDomainIdentification()),
+                Tenures = ((List<Document>) (databaseEntity.Contains("tenures") ? databaseEntity["tenures"] : null)).Select(p => p.ToDomainTenure()),
+                PersonTypes = (List<String>) (databaseEntity.Contains("personTypes") ? databaseEntity["personTypes"] : null)
             };
         }
         public static string getStringDynamoEntry(Document doc, string fieldName)
@@ -66,10 +66,6 @@ namespace DynamoDBIndexingCore.Factories
             }
             catch (Exception e) { Console.WriteLine(e.Message); }
             return value;
-        }
-        public static string getValueDynamoEntry(Document doc, string fieldName)
-        {
-            return doc.Contains(fieldName) ? doc[fieldName] : null;
         }
     }
 }
