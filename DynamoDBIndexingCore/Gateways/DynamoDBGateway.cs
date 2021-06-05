@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using Amazon.DynamoDBv2;
@@ -19,6 +20,10 @@ namespace DynamoDBIndexingCore.Gateways
                 List<Document> documentList = await search.GetNextSetAsync();
                 foreach (var document in documentList)
                 {
+                    if (!document.Contains("firstname"))
+                    {
+                        Console.WriteLine(document["id"]);
+                    }
                     yield return document;
                 }
             } while (!search.IsDone);
