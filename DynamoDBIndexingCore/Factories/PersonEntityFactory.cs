@@ -39,12 +39,15 @@ namespace DynamoDBIndexingCore.Factories
             {
                 Id = databaseEntity["id"],
                 Title = databaseEntity["title"],
+                PreferredFirstname = databaseEntity["preferredTitle"],
                 PreferredFirstname = databaseEntity["preferredFirstname"],
+                PreferredSurname = databaseEntity["preferredMiddleName"],
                 PreferredSurname = databaseEntity["preferredSurname"],
                 Firstname = databaseEntity["firstname"],
-                MiddleName = databaseEntity["middlename"],
+                MiddleName = databaseEntity["middleName"],
                 Surname = databaseEntity["surname"],
                 DateOfBirth = databaseEntity["dateOfBirth"],
+                PreferredFirstname = databaseEntity["nationalInsuranceNo"],
                 Identifications = ((List<Document>) databaseEntity["identifications"]).Select(p => p.ToDomainIdentification()),
                 Tenures = ((List<Document>) databaseEntity["tenures"]).Select(p => p.ToDomainTenure()),
                 PersonTypes = (List<String>) databaseEntity["personTypes"]
