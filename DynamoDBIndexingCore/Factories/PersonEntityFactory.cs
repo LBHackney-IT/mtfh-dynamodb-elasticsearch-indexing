@@ -38,19 +38,19 @@ namespace DynamoDBIndexingCore.Factories
             return new Person
             {
                 Id = databaseEntity["id"],
-                Title = databaseEntity.Contains("title") ? databaseEntity["title"] : null,
-                PreferredTitle = databaseEntity.Contains("preferredTitle") ? databaseEntity["preferredTitle"] : null,
-                PreferredFirstname = databaseEntity.Contains("preferredFirstname") ? databaseEntity["preferredFirstname"] : null,
-                PreferredMiddleName = databaseEntity.Contains("preferredMiddleName") ? databaseEntity["preferredMiddleName"] : null,
-                PreferredSurname = databaseEntity.Contains("preferredSurname") ? databaseEntity["preferredSurname"] : null,
+                Title = databaseEntity["title"],
+                PreferredTitle = databaseEntity.Contains("preferredTitle") ? databaseEntity["preferredTitle"] : "",
+                PreferredFirstname = databaseEntity.Contains("preferredFirstname") ? databaseEntity["preferredFirstname"] : "",
+                PreferredMiddleName = databaseEntity.Contains("preferredMiddleName") ? databaseEntity["preferredMiddleName"] : "",
+                PreferredSurname = databaseEntity.Contains("preferredSurname") ? databaseEntity["preferredSurname"] : "",
                 Firstname = databaseEntity["firstname"],
-                MiddleName = databaseEntity.Contains("middleName") ? databaseEntity["middleName"] : null,
+                MiddleName = databaseEntity.Contains("middleName") ? databaseEntity["middleName"] : "",
                 Surname = databaseEntity["surname"],
-                DateOfBirth = databaseEntity.Contains("dateOfBirth") ? databaseEntity["dateOfBirth"] : null,
-                NationalInsuranceNo = databaseEntity.Contains("nationalInsuranceNo") ? databaseEntity["nationalInsuranceNo"] : null,
-                Identifications = ((List<Document>) (databaseEntity.Contains("identifications") ? databaseEntity["identifications"] : null)).Select(p => p.ToDomainIdentification()),
-                Tenures = ((List<Document>) (databaseEntity.Contains("tenures") ? databaseEntity["tenures"] : null)).Select(p => p.ToDomainTenure()),
-                PersonTypes = (List<String>) (databaseEntity.Contains("personTypes") ? databaseEntity["personTypes"] : null)
+                DateOfBirth = databaseEntity["dateOfBirth"],
+                NationalInsuranceNo = databaseEntity.Contains("nationalInsuranceNo") ? databaseEntity["nationalInsuranceNo"] : "",
+                Identifications = ((List<Document>) databaseEntity["identifications"]).Select(p => p.ToDomainIdentification()),
+                Tenures = ((List<Document>) databaseEntity["tenures"]).Select(p => p.ToDomainTenure()),
+                PersonTypes = (List<String>) databaseEntity["personTypes"]
             };
         }
         public static string getStringDynamoEntry(Document doc, string fieldName)
