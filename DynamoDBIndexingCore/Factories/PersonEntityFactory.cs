@@ -37,20 +37,20 @@ namespace DynamoDBIndexingCore.Factories
         {
             return new Person
             {
-                Id = databaseEntity["id"],
-                Title = databaseEntity["title"],
-                PreferredTitle = databaseEntity["preferredTitle"],
-                PreferredFirstname = databaseEntity["preferredFirstname"],
-                PreferredMiddleName = databaseEntity["preferredMiddleName"],
-                PreferredSurname = databaseEntity["preferredSurname"],
-                Firstname = databaseEntity["firstname"],
-                MiddleName = databaseEntity["middleName"],
-                Surname = databaseEntity["surname"],
-                DateOfBirth = databaseEntity["dateOfBirth"],
-                NationalInsuranceNo = databaseEntity["nationalInsuranceNo"],
-                Identifications = ((List<Document>) databaseEntity["identifications"]).Select(p => p.ToDomainIdentification()),
-                Tenures = ((List<Document>) databaseEntity["tenures"]).Select(p => p.ToDomainTenure()),
-                PersonTypes = (List<String>) databaseEntity["personTypes"]
+                Id = getValueDynamoEntry(databaseEntity, "id"),
+                Title = getValueDynamoEntry(databaseEntity, "title"),
+                PreferredTitle = getValueDynamoEntry(databaseEntity, "preferredTitle"),
+                PreferredFirstname = getValueDynamoEntry(databaseEntity, "preferredFirstname"),
+                PreferredMiddleName = getValueDynamoEntry(databaseEntity, "preferredMiddleName"),
+                PreferredSurname = getValueDynamoEntry(databaseEntity, "preferredSurname"),
+                Firstname = getValueDynamoEntry(databaseEntity, "firstname"),
+                MiddleName = getValueDynamoEntry(databaseEntity, "middleName"),
+                Surname = getValueDynamoEntry(databaseEntity, "surname"),
+                DateOfBirth = getValueDynamoEntry(databaseEntity, "dateOfBirth"),
+                NationalInsuranceNo = getValueDynamoEntry(databaseEntity, "nationalInsuranceNo"),
+                Identifications = ((List<Document>) getValueDynamoEntry(databaseEntity, "identifications")).Select(p => p.ToDomainIdentification()),
+                Tenures = ((List<Document>) getValueDynamoEntry(databaseEntity, "tenures")).Select(p => p.ToDomainTenure()),
+                PersonTypes = (List<String>) getValueDynamoEntry(databaseEntity, "personTypes")
             };
         }
         public static string getStringDynamoEntry(Document doc, string fieldName)
@@ -66,6 +66,10 @@ namespace DynamoDBIndexingCore.Factories
             }
             catch (Exception e) { Console.WriteLine(e.Message); }
             return value;
+        }
+        public static string getValueDynamoEntry(Document doc, string fieldName)
+        {
+            return doc.Contains(fieldName) ? doc[fieldName] : null;
         }
     }
 }
