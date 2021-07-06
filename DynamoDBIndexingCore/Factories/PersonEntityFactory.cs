@@ -17,7 +17,7 @@ namespace DynamoDBIndexingCore.Factories
                 IdentificationType = databaseEntity["identificationType"],
                 Value = databaseEntity["value"],
                 IsOriginalDocumentSeen = (bool) databaseEntity["isOriginalDocumentSeen"],
-                LinkToDocument = databaseEntity["linkToDocument"]
+                LinkToDocument = ""
             };
         }
         public static Tenure ToDomainTenure(this Document databaseEntity)
@@ -40,10 +40,10 @@ namespace DynamoDBIndexingCore.Factories
                 Id = databaseEntity["id"],
                 Title = databaseEntity["title"],
                 PreferredTitle = databaseEntity.Contains("preferredTitle") ? databaseEntity["preferredTitle"] : "",
-                PreferredFirstname = databaseEntity.Contains("preferredFirstname") ? databaseEntity["preferredFirstname"] : "",
+                PreferredFirstname = databaseEntity.Contains("preferredFirstName") ? databaseEntity["preferredFirstName"] : "",
                 PreferredMiddleName = databaseEntity.Contains("preferredMiddleName") ? databaseEntity["preferredMiddleName"] : "",
                 PreferredSurname = databaseEntity.Contains("preferredSurname") ? databaseEntity["preferredSurname"] : "",
-                Firstname = databaseEntity.Contains("firstname") ? databaseEntity["firstname"] : "",
+                Firstname = databaseEntity.Contains("firstName") ? databaseEntity["firstName"] : "",
                 MiddleName = databaseEntity.Contains("middleName") ? databaseEntity["middleName"] : "",
                 Surname = databaseEntity.Contains("surname") ? databaseEntity["surname"] : "",
                 DateOfBirth = databaseEntity["dateOfBirth"],
