@@ -14,10 +14,10 @@ namespace DynamoDBIndexingCore.Factories
         {
             return new Identification
             {
-                IdentificationType = databaseEntity.Contains("identificationType") ? databaseEntity["identificationType"] : "",
-                Value = databaseEntity.Contains("value") ? databaseEntity["value"] : "",
-                IsOriginalDocumentSeen = databaseEntity.Contains("isOriginalDocumentSeen") ? (bool) databaseEntity["isOriginalDocumentSeen"] : false,
-                LinkToDocument = databaseEntity.Contains("linkToDocument") ? databaseEntity["linkToDocument"] : ""
+                IdentificationType = databaseEntity["identificationType"],
+                Value = databaseEntity["value"],
+                IsOriginalDocumentSeen = (bool) databaseEntity["isOriginalDocumentSeen"],
+                LinkToDocument = ""
             };
         }
         public static Tenure ToDomainTenure(this Document databaseEntity)
