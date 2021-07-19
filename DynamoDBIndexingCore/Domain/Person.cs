@@ -15,8 +15,7 @@ namespace DynamoDBIndexingCore.Domain
         public string MiddleName { get; set; }
         public string Surname { get; set; }
         public string DateOfBirth { get; set; }
-        public string NationalInsuranceNo { get; set; }
-        public IEnumerable<Identification> Identifications { get; set; }
+        public string PlaceOfBirth { get; set; }
         public IEnumerable<Tenure> Tenures { get; set; }
         public IEnumerable<String> PersonTypes { get; set; }
     }

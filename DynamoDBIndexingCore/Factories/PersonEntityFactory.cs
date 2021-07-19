@@ -10,26 +10,18 @@ namespace DynamoDBIndexingCore.Factories
 {
     public static class PersonEntityFactory
     {
-        public static Identification ToDomainIdentification(this Document databaseEntity)
-        {
-            return new Identification
-            {
-                IdentificationType = databaseEntity["identificationType"],
-                Value = databaseEntity["value"],
-                IsOriginalDocumentSeen = (bool) databaseEntity["isOriginalDocumentSeen"],
-                LinkToDocument = ""
-            };
-        }
         public static Tenure ToDomainTenure(this Document databaseEntity)
         {
             return new Tenure
             {
                 Id = databaseEntity["id"],
+                PaymentReference = getStringDynamoEntry(databaseEntity, "paymentReference"),
                 Type = getStringDynamoEntry(databaseEntity, "type"),
                 StartDate = getStringDynamoEntry(databaseEntity, "startDate"),
                 EndDate = getStringDynamoEntry(databaseEntity, "endDate"),
                 AssetFullAddress = getStringDynamoEntry(databaseEntity, "assetFullAddress"),
                 Uprn = getStringDynamoEntry(databaseEntity, "uprn"),
+                PropertyReference = getStringDynamoEntry(databaseEntity, "propertyReference"),
                 AssetId = getStringDynamoEntry(databaseEntity, "assetId")
             };
         }
@@ -47,8 +39,7 @@ namespace DynamoDBIndexingCore.Factories
                 MiddleName = databaseEntity.Contains("middleName") ? databaseEntity["middleName"] : "",
                 Surname = databaseEntity.Contains("surname") ? databaseEntity["surname"] : "",
                 DateOfBirth = databaseEntity["dateOfBirth"],
-                NationalInsuranceNo = databaseEntity.Contains("nationalInsuranceNo") ? databaseEntity["nationalInsuranceNo"] : "",
-                Identifications = ((List<Document>) databaseEntity["identifications"]).Select(p => p.ToDomainIdentification()),
+                PlaceOfBirth = databaseEntity.Contains("placeOfBirth") ? databaseEntity["placeOfBirth"] : "",
                 Tenures = ((List<Document>) databaseEntity["tenures"]).Select(p => p.ToDomainTenure()),
                 PersonTypes = (List<String>) databaseEntity["personTypes"]
             };
