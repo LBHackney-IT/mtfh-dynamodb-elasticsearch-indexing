@@ -44,10 +44,10 @@ namespace DynamoDBIndexingCore.Factories
                 Id = databaseEntity["id"],
                 PaymentReference = databaseEntity["paymentReference"],
                 HouseholdMembers = ((List<Document>) databaseEntity["householdMembers"]).Select(p => p.ToDomainPersonForTenure()),
-                TenuredAsset = ((Document) databaseEntity["tenuredAsset"]).ToDomainAssetForTenure(),
+                // TenuredAsset = ((Document) databaseEntity["tenuredAsset"]).ToDomainAssetForTenure(),
                 StartOfTenureDate = databaseEntity.Contains("startOfTenureDate") ? databaseEntity["startOfTenureDate"] : "",
-                EndOfTenureDate = databaseEntity.Contains("endOfTenureDate") ? databaseEntity["endOfTenureDate"] : "",
-                TenureType = ((Document) databaseEntity["tenureType"]).ToDomainTenureType()
+                EndOfTenureDate = databaseEntity.Contains("endOfTenureDate") ? databaseEntity["endOfTenureDate"] : ""
+                // TenureType = ((Document) databaseEntity["tenureType"]).ToDomainTenureType()
             };
         }
         public static string getStringDynamoEntry(Document doc, string fieldName)
