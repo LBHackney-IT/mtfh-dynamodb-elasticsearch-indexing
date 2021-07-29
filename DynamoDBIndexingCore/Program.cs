@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 
-using DynamoDBIndexingCore.Domain;
 using DynamoDBIndexingCore.UseCase;
 
 namespace NetCore.Docker
@@ -18,6 +17,11 @@ namespace NetCore.Docker
             {
                 SyncPersonData syncPersonData = new SyncPersonData();
                 await syncPersonData.ExecuteSyncPersonData(dynamoTable, indexNodeHost, indexName);
+            }
+            else if (dynamoTable == "TenureInformation")
+            {
+                SyncTenureData syncTenureData = new SyncTenureData();
+                await syncTenureData.ExecuteSyncTenureData(dynamoTable, indexNodeHost, indexName);
             }
             else
             {
