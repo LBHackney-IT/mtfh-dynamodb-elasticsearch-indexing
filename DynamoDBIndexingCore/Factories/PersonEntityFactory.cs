@@ -10,9 +10,9 @@ namespace DynamoDBIndexingCore.Factories
 {
     public static class PersonEntityFactory
     {
-        public static Tenure ToDomainTenure(this Document databaseEntity)
+        public static TenureForPerson ToDomainTenureForPerson(this Document databaseEntity)
         {
-            return new Tenure
+            return new TenureForPerson
             {
                 Id = databaseEntity["id"],
                 PaymentReference = getStringDynamoEntry(databaseEntity, "paymentReference"),
@@ -40,7 +40,7 @@ namespace DynamoDBIndexingCore.Factories
                 Surname = databaseEntity.Contains("surname") ? databaseEntity["surname"] : "",
                 DateOfBirth = databaseEntity["dateOfBirth"],
                 PlaceOfBirth = databaseEntity.Contains("placeOfBirth") ? databaseEntity["placeOfBirth"] : "",
-                Tenures = ((List<Document>) databaseEntity["tenures"]).Select(p => p.ToDomainTenure()),
+                Tenures = ((List<Document>) databaseEntity["tenures"]).Select(p => p.ToDomainTenureForPerson()),
                 PersonTypes = (List<String>) databaseEntity["personTypes"]
             };
         }

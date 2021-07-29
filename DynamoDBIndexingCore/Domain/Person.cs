@@ -16,7 +16,7 @@ namespace DynamoDBIndexingCore.Domain
         public string Surname { get; set; }
         public string DateOfBirth { get; set; }
         public string PlaceOfBirth { get; set; }
-        public IEnumerable<Tenure> Tenures { get; set; }
+        public IEnumerable<TenureForPerson> Tenures { get; set; }
         public IEnumerable<String> PersonTypes { get; set; }
     }
 }
