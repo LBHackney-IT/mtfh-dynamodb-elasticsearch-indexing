@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 
 using Amazon.DynamoDBv2.DocumentModel;
-
 using DynamoDBIndexingCore.Domain;
 
 namespace DynamoDBIndexingCore.Factories
@@ -17,7 +16,7 @@ namespace DynamoDBIndexingCore.Factories
                 Id = databaseEntity["id"],
                 Type = getStringDynamoEntry(databaseEntity, "type"),
                 FullName = getStringDynamoEntry(databaseEntity, "fullName"),
-                isResponsible = (Boolean)databaseEntity["isResponsible"]
+                isResponsible = (Boolean) databaseEntity["isResponsible"]
             };
         }
         public static AssetForTenure ToDomainAssetForTenure(this Document databaseEntity)
