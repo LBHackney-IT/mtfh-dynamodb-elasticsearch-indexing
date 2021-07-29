@@ -15,8 +15,8 @@ namespace DynamoDBIndexingCore.Factories
             {
                 Id = databaseEntity["id"],
                 Type = getStringDynamoEntry(databaseEntity, "type"),
-                FullName = getStringDynamoEntry(databaseEntity, "fullName"),
-                isResponsible = (Boolean) databaseEntity["isResponsible"]
+                FullName = getStringDynamoEntry(databaseEntity, "fullName")
+                // isResponsible = (Boolean) databaseEntity["isResponsible"]
             };
         }
         public static AssetForTenure ToDomainAssetForTenure(this Document databaseEntity)
