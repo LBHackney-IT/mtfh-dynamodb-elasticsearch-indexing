@@ -42,11 +42,11 @@ namespace DynamoDBIndexingCore.Factories
             return new Tenure
             {
                 Id = databaseEntity["id"],
-                // PaymentReference = databaseEntity["paymentReference"],
+                PaymentReference = databaseEntity["paymentReference"],
                 // HouseholdMembers = ((List<Document>) databaseEntity["householdMembers"]).Select(p => p.ToDomainPersonForTenure()),
                 // TenuredAsset = ((Document) databaseEntity["tenuredAsset"]).ToDomainAssetForTenure(),
-                // StartOfTenureDate = databaseEntity.Contains("startOfTenureDate") ? databaseEntity["startOfTenureDate"] : "",
-                // EndOfTenureDate = databaseEntity.Contains("endOfTenureDate") ? databaseEntity["endOfTenureDate"] : ""
+                StartOfTenureDate = databaseEntity.Contains("startOfTenureDate") ? databaseEntity["startOfTenureDate"] : "",
+                EndOfTenureDate = databaseEntity.Contains("endOfTenureDate") ? databaseEntity["endOfTenureDate"] : ""
                 // TenureType = ((Document) databaseEntity["tenureType"]).ToDomainTenureType()
             };
         }
