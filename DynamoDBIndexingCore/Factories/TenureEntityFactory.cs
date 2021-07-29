@@ -15,8 +15,8 @@ namespace DynamoDBIndexingCore.Factories
             {
                 Id = databaseEntity["id"],
                 Type = getStringDynamoEntry(databaseEntity, "type"),
-                FullName = getStringDynamoEntry(databaseEntity, "fullName")
-                // isResponsible = (Boolean) databaseEntity["isResponsible"]
+                FullName = getStringDynamoEntry(databaseEntity, "fullName"),
+                isResponsible = (Boolean) databaseEntity["isResponsible"]
             };
         }
         public static AssetForTenure ToDomainAssetForTenure(this Document databaseEntity)
@@ -43,11 +43,11 @@ namespace DynamoDBIndexingCore.Factories
             {
                 Id = databaseEntity["id"],
                 PaymentReference = databaseEntity["paymentReference"],
-                // HouseholdMembers = ((List<Document>) databaseEntity["householdMembers"]).Select(p => p.ToDomainPersonForTenure()),
-                // TenuredAsset = ((Document) databaseEntity["tenuredAsset"]).ToDomainAssetForTenure(),
+                HouseholdMembers = ((List<Document>) databaseEntity["householdMembers"]).Select(p => p.ToDomainPersonForTenure()),
+                TenuredAsset = ((Document) databaseEntity["tenuredAsset"]).ToDomainAssetForTenure(),
                 StartOfTenureDate = databaseEntity.Contains("startOfTenureDate") ? getStringDynamoEntry(databaseEntity, "startOfTenureDate") : "",
-                EndOfTenureDate = databaseEntity.Contains("endOfTenureDate") ? getStringDynamoEntry(databaseEntity, "endOfTenureDate") : ""
-                // TenureType = ((Document) databaseEntity["tenureType"]).ToDomainTenureType()
+                EndOfTenureDate = databaseEntity.Contains("endOfTenureDate") ? getStringDynamoEntry(databaseEntity, "endOfTenureDate") : "",
+                TenureType = ((Document) databaseEntity["tenureType"]).ToDomainTenureType()
             };
         }
         public static string getStringDynamoEntry(Document doc, string fieldName)
