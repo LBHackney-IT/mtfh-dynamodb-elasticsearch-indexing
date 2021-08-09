@@ -22,6 +22,18 @@ resource "aws_iam_policy" "lambda_dynamodb_sns_policy" {
         {
             "Effect": "Allow",
             "Action": [
+                        "dynamodb:BatchGet*",
+                        "dynamodb:DescribeStream",
+                        "dynamodb:DescribeTable",
+                        "dynamodb:Get*",
+                        "dynamodb:Query",
+                        "dynamodb:Scan"
+                     ],
+            "Resource": "arn:aws:dynamodb:eu-west-2:${data.aws_caller_identity.current.account_id}:table/TenureInformation"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
                 "ecr:GetAuthorizationToken",
                 "ecr:BatchCheckLayerAvailability",
                 "ecr:GetDownloadUrlForLayer",
