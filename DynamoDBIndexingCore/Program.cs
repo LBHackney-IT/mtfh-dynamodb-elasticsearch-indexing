@@ -23,6 +23,11 @@ namespace NetCore.Docker
                 SyncTenureData syncTenureData = new SyncTenureData();
                 await syncTenureData.ExecuteSyncTenureData(dynamoTable, indexNodeHost, indexName);
             }
+            else if (dynamoTable == "Assets")
+            {
+                SyncAssetData syncAssetData = new SyncAssetData();
+                await syncAssetData.ExecuteSyncAssetData(dynamoTable, indexNodeHost, indexName);
+            }
             else
             {
                 Console.WriteLine("Invalid entity to sync!");
