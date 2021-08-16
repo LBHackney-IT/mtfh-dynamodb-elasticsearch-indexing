@@ -24,9 +24,9 @@ namespace DynamoDBIndexingCore.Factories
         {
             return new TenureForAsset
             {
-                Id = databaseEntity["id"],
-                PaymentReference = databaseEntity["paymentReference"],
-                Type = databaseEntity["type"],
+                Id = databaseEntity.Contains("id") ? getStringDynamoEntry(databaseEntity, "id") : "",
+                PaymentReference = databaseEntity.Contains("paymentReference") ? getStringDynamoEntry(databaseEntity, "paymentReference") : "",
+                Type = databaseEntity.Contains("type") ? getStringDynamoEntry(databaseEntity, "type") : "",
                 StartOfTenureDate = databaseEntity.Contains("startOfTenureDate") ? getStringDynamoEntry(databaseEntity, "startOfTenureDate") : "",
                 EndOfTenureDate = databaseEntity.Contains("endOfTenureDate") ? getStringDynamoEntry(databaseEntity, "endOfTenureDate") : ""
             };
