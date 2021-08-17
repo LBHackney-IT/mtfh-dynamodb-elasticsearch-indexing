@@ -7,6 +7,6 @@ namespace DynamoDBIndexingCore.Domain
         public string AssetType { get; set; }
         public AssetAddress AssetAddress { get; set; }
         public TenureForAsset Tenure { get; set; }
-        public bool IsCautionaryAlerted {get; set; }
+        public bool IsCautionaryAlerted { get; set; }
     }
 }
