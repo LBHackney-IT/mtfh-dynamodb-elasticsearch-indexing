@@ -39,7 +39,8 @@ namespace DynamoDBIndexingCore.Factories
                 AssetId = databaseEntity["assetId"],
                 AssetType = databaseEntity["assetType"],
                 AssetAddress = ((Document) databaseEntity["assetAddress"]).ToDomainAssetAddress(),
-                Tenure = ((Document) databaseEntity["tenure"]).ToDomainTenureForAsset()
+                Tenure = ((Document) databaseEntity["tenure"]).ToDomainTenureForAsset(),
+                IsCautionaryAlerted = false
             };
         }
         public static string getStringDynamoEntry(Document doc, string fieldName)
