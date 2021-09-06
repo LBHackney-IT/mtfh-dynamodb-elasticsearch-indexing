@@ -9,7 +9,6 @@ namespace DynamoDBIndexingCore.Factories
     {
         public static AssetAddress ToDomainAssetAddress(this Document databaseEntity)
         {
-            Console.WriteLine("uprn: " + databaseEntity["uprn"]);
             return new AssetAddress
             {
                 Uprn = databaseEntity.Contains("uprn") ? getStringDynamoEntry(databaseEntity, "uprn") : "",
@@ -34,7 +33,6 @@ namespace DynamoDBIndexingCore.Factories
         }
         public static Asset ToDomainAsset(this Document databaseEntity)
         {
-            Console.WriteLine("Asset ID: " + databaseEntity["id"]);
             return new Asset
             {
                 Id = databaseEntity["id"],
