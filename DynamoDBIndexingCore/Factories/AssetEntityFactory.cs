@@ -11,7 +11,7 @@ namespace DynamoDBIndexingCore.Factories
         {
             return new AssetAddress
             {
-                Uprn = getStringDynamoEntry(databaseEntity, "uprn"),
+                Uprn = databaseEntity.Contains("uprn") ? getStringDynamoEntry(databaseEntity, "uprn") : "",
                 AddressLine1 = databaseEntity["addressLine1"],
                 AddressLine2 = databaseEntity["addressLine2"],
                 AddressLine3 = databaseEntity["addressLine3"],
