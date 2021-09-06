@@ -41,7 +41,7 @@ namespace DynamoDBIndexingCore.Factories
                 AssetId = databaseEntity["assetId"],
                 AssetType = databaseEntity["assetType"],
                 AssetAddress = ((Document) databaseEntity["assetAddress"]).ToDomainAssetAddress(),
-                Tenure = ((Document) databaseEntity["tenure"]).ToDomainTenureForAsset(),
+                Tenure = databaseEntity["tenure"].GetType() != typeof(DynamoDBNull) ? ((Document) databaseEntity["tenure"]).ToDomainTenureForAsset() : null,
                 IsCautionaryAlerted = false
             };
         }
