@@ -13,12 +13,12 @@ namespace DynamoDBIndexingCore.Factories
             return new AssetAddress
             {
                 Uprn = databaseEntity.Contains("uprn") ? getStringDynamoEntry(databaseEntity, "uprn") : "",
-                AddressLine1 = databaseEntity["addressLine1"],
-                AddressLine2 = databaseEntity["addressLine2"],
-                AddressLine3 = databaseEntity["addressLine3"],
-                AddressLine4 = databaseEntity["addressLine4"],
-                PostCode = databaseEntity["postCode"],
-                PostPreamble = databaseEntity["postPreamble"]
+                AddressLine1 = databaseEntity.Contains("addressLine1") ? getStringDynamoEntry(databaseEntity, "addressLine1") : "",
+                AddressLine2 = databaseEntity.Contains("addressLine2") ? getStringDynamoEntry(databaseEntity, "addressLine2") : "",
+                AddressLine3 = databaseEntity.Contains("addressLine3") ? getStringDynamoEntry(databaseEntity, "addressLine3") : "",
+                AddressLine4 = databaseEntity.Contains("addressLine4") ? getStringDynamoEntry(databaseEntity, "addressLine4") : "",
+                PostCode = databaseEntity.Contains("postCode") ? getStringDynamoEntry(databaseEntity, "postCode") : "",
+                PostPreamble = databaseEntity.Contains("postPreamble") ? getStringDynamoEntry(databaseEntity, "postPreamble") : ""
             };
         }
         public static TenureForAsset ToDomainTenureForAsset(this Document databaseEntity)
