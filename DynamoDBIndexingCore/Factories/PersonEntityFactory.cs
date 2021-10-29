@@ -30,7 +30,7 @@ namespace DynamoDBIndexingCore.Factories
             return new Person
             {
                 Id = databaseEntity["id"],
-                Title = databaseEntity.Contains("title") ? databaseEntity["title"] : "",
+                Title = databaseEntity.Contains("title") & databaseEntity["title"] != null ? databaseEntity["title"] : "",
                 PreferredTitle = databaseEntity.Contains("preferredTitle") ? databaseEntity["preferredTitle"] : "",
                 PreferredFirstname = databaseEntity.Contains("preferredFirstName") ? databaseEntity["preferredFirstName"] : "",
                 PreferredMiddleName = databaseEntity.Contains("preferredMiddleName") ? databaseEntity["preferredMiddleName"] : "",
@@ -38,7 +38,7 @@ namespace DynamoDBIndexingCore.Factories
                 Firstname = databaseEntity.Contains("firstName") ? databaseEntity["firstName"] : "",
                 MiddleName = databaseEntity.Contains("middleName") ? databaseEntity["middleName"] : "",
                 Surname = databaseEntity.Contains("surname") ? databaseEntity["surname"] : "",
-                DateOfBirth = databaseEntity.Contains("dateOfBirth") ? databaseEntity["dateOfBirth"] : "",
+                DateOfBirth = databaseEntity.Contains("dateOfBirth") & databaseEntity["dateOfBirth"] != null ? databaseEntity["dateOfBirth"] : "",
                 PlaceOfBirth = databaseEntity.Contains("placeOfBirth") ? databaseEntity["placeOfBirth"] : "",
                 Tenures = ((List<Document>) databaseEntity["tenures"]).Select(p => p.ToDomainTenureForPerson()),
                 PersonTypes = (List<String>) databaseEntity["personTypes"]
