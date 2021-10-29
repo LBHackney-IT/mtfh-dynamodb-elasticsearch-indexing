@@ -31,7 +31,7 @@ namespace DynamoDBIndexingCore.Factories
             {
                 Id = databaseEntity["id"],
                 Title = databaseEntity.Contains("title") & databaseEntity["title"] != null ? databaseEntity["title"] : "",
-                PreferredTitle = databaseEntity.Contains("preferredTitle") ? databaseEntity["preferredTitle"] : "",
+                PreferredTitle = databaseEntity.Contains("preferredTitle") & databaseEntity["preferredTitle"] != null ? databaseEntity["preferredTitle"] : "",
                 PreferredFirstname = databaseEntity.Contains("preferredFirstName") ? databaseEntity["preferredFirstName"] : "",
                 PreferredMiddleName = databaseEntity.Contains("preferredMiddleName") ? databaseEntity["preferredMiddleName"] : "",
                 PreferredSurname = databaseEntity.Contains("preferredSurname") ? databaseEntity["preferredSurname"] : "",
