@@ -30,15 +30,15 @@ namespace DynamoDBIndexingCore.Factories
             return new Person
             {
                 Id = databaseEntity["id"],
-                Title = databaseEntity.Contains("title") & databaseEntity["title"] != null ? databaseEntity["title"] : "",
-                PreferredTitle = databaseEntity.Contains("preferredTitle") & databaseEntity["preferredTitle"] != null ? databaseEntity["preferredTitle"] : "",
+                Title = databaseEntity.Contains("title") ? getStringDynamoEntry(databaseEntity, "title") : "",
+                PreferredTitle = databaseEntity.Contains("preferredTitle") ? getStringDynamoEntry(databaseEntity, "preferredTitle") : "",
                 PreferredFirstname = databaseEntity.Contains("preferredFirstName") ? databaseEntity["preferredFirstName"] : "",
                 PreferredMiddleName = databaseEntity.Contains("preferredMiddleName") ? databaseEntity["preferredMiddleName"] : "",
                 PreferredSurname = databaseEntity.Contains("preferredSurname") ? databaseEntity["preferredSurname"] : "",
                 Firstname = databaseEntity.Contains("firstName") ? databaseEntity["firstName"] : "",
                 MiddleName = databaseEntity.Contains("middleName") ? databaseEntity["middleName"] : "",
                 Surname = databaseEntity.Contains("surname") ? databaseEntity["surname"] : "",
-                DateOfBirth = databaseEntity.Contains("dateOfBirth") & databaseEntity["dateOfBirth"] != null ? databaseEntity["dateOfBirth"] : "",
+                DateOfBirth = databaseEntity.Contains("dateOfBirth") ? getStringDynamoEntry(databaseEntity, "dateOfBirth") : "",
                 PlaceOfBirth = databaseEntity.Contains("placeOfBirth") ? databaseEntity["placeOfBirth"] : "",
                 Tenures = ((List<Document>) databaseEntity["tenures"]).Select(p => p.ToDomainTenureForPerson()),
                 PersonTypes = (List<String>) databaseEntity["personTypes"]
