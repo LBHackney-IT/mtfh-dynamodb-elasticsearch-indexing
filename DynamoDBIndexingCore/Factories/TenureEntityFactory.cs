@@ -42,7 +42,7 @@ namespace DynamoDBIndexingCore.Factories
             return new Tenure
             {
                 Id = databaseEntity["id"],
-                PaymentReference = databaseEntity["paymentReference"],
+                PaymentReference = databaseEntity.Contains("paymentReference") ? databaseEntity["paymentReference"] : "",
                 HouseholdMembers = ((List<Document>) databaseEntity["householdMembers"]).Select(p => p.ToDomainPersonForTenure()),
                 TenuredAsset = ((Document) databaseEntity["tenuredAsset"]).ToDomainAssetForTenure(),
                 StartOfTenureDate = databaseEntity.Contains("startOfTenureDate") ? getStringDynamoEntry(databaseEntity, "startOfTenureDate") : "",
