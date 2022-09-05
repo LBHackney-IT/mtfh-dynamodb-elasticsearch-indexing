@@ -47,7 +47,7 @@ namespace DynamoDBIndexingCore.Factories
                 TenuredAsset = databaseEntity.Contains("tenuredAsset") ? ((Document) databaseEntity["tenuredAsset"]).ToDomainAssetForTenure() : null,
                 StartOfTenureDate = databaseEntity.Contains("startOfTenureDate") ? getStringDynamoEntry(databaseEntity, "startOfTenureDate") : "",
                 EndOfTenureDate = databaseEntity.Contains("endOfTenureDate") ? getStringDynamoEntry(databaseEntity, "endOfTenureDate") : "",
-                TenureType = ((Document) databaseEntity["tenureType"]).ToDomainTenureType()
+                TenureType = databaseEntity.Contains("tenureType") ? ((Document) databaseEntity["tenureType"]).ToDomainTenureType() : null
             };
         }
         public static string getStringDynamoEntry(Document doc, string fieldName)
