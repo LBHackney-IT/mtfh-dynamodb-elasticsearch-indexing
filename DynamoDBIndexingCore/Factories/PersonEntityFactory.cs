@@ -40,7 +40,7 @@ namespace DynamoDBIndexingCore.Factories
                 Surname = databaseEntity.Contains("surname") ? databaseEntity["surname"] : "",
                 DateOfBirth = databaseEntity.Contains("dateOfBirth") ? getStringDynamoEntry(databaseEntity, "dateOfBirth") : "",
                 PlaceOfBirth = databaseEntity.Contains("placeOfBirth") ? databaseEntity["placeOfBirth"] : "",
-                Tenures = ((List<Document>) databaseEntity["tenures"]).Select(p => p.ToDomainTenureForPerson()),
+                Tenures = databaseEntity.Contains("tenures") ? ((List<Document>) databaseEntity["tenures"]).Select(p => p.ToDomainTenureForPerson()) : null,
                 PersonTypes = (List<String>) databaseEntity["personTypes"]
             };
         }
