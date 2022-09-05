@@ -191,8 +191,8 @@ commands:
           command: |
             AWS_ECS_TASK_ARN=`cat /tmp/workspace/aws_ecs_task_arn`
             cd ./DynamoDBIndexing/
-            sls deploy --stage <<parameters.stage>> --account <<parameters.aws-account>> --param= $AWS_ECS_TASK_ARN \
-                       --param7= <<parameters.ecr_repo_name>> --param= <<parameters.ecs_cluster_name>> --conceal
+            sls deploy --stage <<parameters.stage>> --account <<parameters.aws-account>> --param ="aws_ecs_task_arn=$AWS_ECS_TASK_ARN" \
+                       --param="ecr_repo_name=<<parameters.ecr_repo_name>>" --param="ecs_cluster_name=<<parameters.ecs_cluster_name>>" --conceal
 
 jobs:
   check-code-formatting:
