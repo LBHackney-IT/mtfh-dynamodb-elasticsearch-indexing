@@ -6,8 +6,8 @@ provider:
   tracing:
     lambda: true
     apiGateway: true
-  vpc: ${self:custom.vpc.${param:stage}}
-  stage: ${param:stage}
+  vpc: ${self:custom.vpc.${opt:stage}}
+  stage: ${opt:stage}
   account: ${param:account}
   aws_ecs_task_arn: ${param:aws_ecs_task_arn}
   ecr_repo_name: ${param:ecr_repo_name}
@@ -33,7 +33,7 @@ functions:
     timeout: 900
     environment:
       AWS_ECS_TASK_ARN: ${self:provider.aws_ecs_task_arn}
-      AWS_NETWORK_SUBNET: ${self:custom.vpc.${param:stage}.subnetIds.0}
+      AWS_NETWORK_SUBNET: ${self:custom.vpc.${opt:stage}.subnetIds.0}
       ECR_REPO_NAME: ${self:provider.ecr_repo_name}
       ECS_CLUSTER_NAME: ${self:provider.ecs_cluster_name}
 resources:
@@ -46,7 +46,7 @@ resources:
         SecurityGroupEgress:
           - IpProtocol: -1
             CidrIp: 0.0.0.0/0
-        VpcId: ${self:custom.vpcId.${param:stage}}
+        VpcId: ${self:custom.vpcId.${opt:stage}}
     lambdaExecutionRole:
       Type: AWS::IAM::Role
       Properties:
