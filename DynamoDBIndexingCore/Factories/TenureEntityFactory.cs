@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 using Amazon.DynamoDBv2.DocumentModel;
 using DynamoDBIndexingCore.Domain;
-using Amazon.Lambda.Core;
 
 namespace DynamoDBIndexingCore.Factories
 {
