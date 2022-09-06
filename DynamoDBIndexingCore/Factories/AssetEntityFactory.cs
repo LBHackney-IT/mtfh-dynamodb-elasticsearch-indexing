@@ -33,10 +33,11 @@ namespace DynamoDBIndexingCore.Factories
         }
         public static Asset ToDomainAsset(this Document databaseEntity)
         {
+            Console.WriteLine($"id is {databaseEntity["id"]}");
             return new Asset
             {
                 Id = databaseEntity["id"],
-                AssetId = databaseEntity["assetId"],
+                AssetId = databaseEntity.Contains("assetId") ? databaseEntity["assetId"] : "",
                 AssetType = databaseEntity["assetType"],
                 AssetAddress = databaseEntity.Contains("assetAddress") ? ((Document) databaseEntity["assetAddress"]).ToDomainAssetAddress() : null,
                 Tenure = databaseEntity.Contains("tenure") ? databaseEntity["tenure"].GetType() != typeof(DynamoDBNull) ? ((Document) databaseEntity["tenure"]).ToDomainTenureForAsset() : null : null,
