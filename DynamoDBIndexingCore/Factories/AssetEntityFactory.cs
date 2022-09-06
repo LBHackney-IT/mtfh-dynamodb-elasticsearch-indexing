@@ -1,5 +1,5 @@
 using System;
-
+using Amazon.Lambda.Core;
 using Amazon.DynamoDBv2.DocumentModel;
 using DynamoDBIndexingCore.Domain;
 
@@ -7,6 +7,7 @@ namespace DynamoDBIndexingCore.Factories
 {
     public static class AssetEntityFactory
     {
+        private static ILambdaContext _lambdaContext { get; set; }
         public static AssetAddress ToDomainAssetAddress(this Document databaseEntity)
         {
             return new AssetAddress
@@ -33,10 +34,11 @@ namespace DynamoDBIndexingCore.Factories
         }
         public static Asset ToDomainAsset(this Document databaseEntity)
         {
+            _lambdaContext.Logger.Log($"id is {databaseEntity["id"]}");
             return new Asset
             {
                 Id = databaseEntity["id"],
-                AssetId = databaseEntity["assetId"],
+                AssetId = databaseEntity.Contains("assetId") ? databaseEntity["assetId"] : "",
                 AssetType = databaseEntity["assetType"],
                 AssetAddress = databaseEntity.Contains("assetAddress") ? ((Document) databaseEntity["assetAddress"]).ToDomainAssetAddress() : null,
                 Tenure = databaseEntity.Contains("tenure") ? databaseEntity["tenure"].GetType() != typeof(DynamoDBNull) ? ((Document) databaseEntity["tenure"]).ToDomainTenureForAsset() : null : null,
