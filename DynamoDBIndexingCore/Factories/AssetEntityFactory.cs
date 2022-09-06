@@ -1,6 +1,5 @@
 using System;
 using Amazon.DynamoDBv2.DocumentModel;
-using Amazon.Lambda.Core;
 using DynamoDBIndexingCore.Domain;
 
 namespace DynamoDBIndexingCore.Factories
