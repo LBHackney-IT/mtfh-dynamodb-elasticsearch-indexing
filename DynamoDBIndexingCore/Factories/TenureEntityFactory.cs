@@ -10,7 +10,6 @@ namespace DynamoDBIndexingCore.Factories
 {
     public static class TenureEntityFactory
     {
-        private static ILambdaContext _lambdaContext { get; set; }
 
         public static PersonForTenure ToDomainPersonForTenure(this Document databaseEntity)
         {
@@ -42,7 +41,7 @@ namespace DynamoDBIndexingCore.Factories
         }
         public static Tenure ToDomainTenure(this Document databaseEntity)
         {
-            _lambdaContext.Logger.Log($"id is {databaseEntity["id"]}");
+            Console.WriteLine($"Id is {databaseEntity["id"]}");
 
             return new Tenure
             {

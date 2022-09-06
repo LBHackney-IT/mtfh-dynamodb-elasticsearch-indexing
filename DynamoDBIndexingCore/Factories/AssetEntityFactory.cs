@@ -7,7 +7,6 @@ namespace DynamoDBIndexingCore.Factories
 {
     public static class AssetEntityFactory
     {
-        private static ILambdaContext _lambdaContext { get; set; }
         public static AssetAddress ToDomainAssetAddress(this Document databaseEntity)
         {
             return new AssetAddress
@@ -34,7 +33,7 @@ namespace DynamoDBIndexingCore.Factories
         }
         public static Asset ToDomainAsset(this Document databaseEntity)
         {
-            _lambdaContext.Logger.Log($"id is {databaseEntity["id"]}");
+            Console.WriteLine($"Id is {databaseEntity["id"]}");
             return new Asset
             {
                 Id = databaseEntity["id"],
