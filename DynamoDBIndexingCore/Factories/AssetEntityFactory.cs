@@ -1,5 +1,4 @@
 using System;
-
 using Amazon.DynamoDBv2.DocumentModel;
 using DynamoDBIndexingCore.Domain;
 
@@ -33,13 +32,14 @@ namespace DynamoDBIndexingCore.Factories
         }
         public static Asset ToDomainAsset(this Document databaseEntity)
         {
+            Console.WriteLine($"Id is {databaseEntity["id"]}");
             return new Asset
             {
                 Id = databaseEntity["id"],
-                AssetId = databaseEntity["assetId"],
+                AssetId = databaseEntity.Contains("assetId") ? databaseEntity["assetId"] : "",
                 AssetType = databaseEntity["assetType"],
-                AssetAddress = ((Document) databaseEntity["assetAddress"]).ToDomainAssetAddress(),
-                Tenure = databaseEntity["tenure"].GetType() != typeof(DynamoDBNull) ? ((Document) databaseEntity["tenure"]).ToDomainTenureForAsset() : null,
+                AssetAddress = databaseEntity.Contains("assetAddress") ? ((Document) databaseEntity["assetAddress"]).ToDomainAssetAddress() : null,
+                Tenure = databaseEntity.Contains("tenure") ? databaseEntity["tenure"].GetType() != typeof(DynamoDBNull) ? ((Document) databaseEntity["tenure"]).ToDomainTenureForAsset() : null : null,
                 IsCautionaryAlerted = false
             };
         }

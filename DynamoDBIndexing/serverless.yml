@@ -8,10 +8,11 @@ provider:
     apiGateway: true
   vpc: ${self:custom.vpc.${opt:stage}}
   stage: ${opt:stage}
-  account: ${opt:account}
-  aws_ecs_task_arn: ${opt:aws_ecs_task_arn}
-  ecr_repo_name: ${opt:ecr_repo_name}
-  ecs_cluster_name: ${opt:ecs_cluster_name}
+  account: ${param:account}
+  environment:
+    aws_ecs_task_arn: ${param:aws_ecs_task_arn}
+    ecr_repo_name: ${param:ecr_repo_name}
+    ecs_cluster_name: ${param:ecs_cluster_name}
   region: eu-west-2
   apiKeys:
     - secureAccess:
@@ -32,10 +33,10 @@ functions:
     role: lambdaExecutionRole
     timeout: 900
     environment:
-      AWS_ECS_TASK_ARN: ${self:provider.aws_ecs_task_arn}
+      AWS_ECS_TASK_ARN: ${self:provider.environment.aws_ecs_task_arn}
       AWS_NETWORK_SUBNET: ${self:custom.vpc.${opt:stage}.subnetIds.0}
-      ECR_REPO_NAME: ${self:provider.ecr_repo_name}
-      ECS_CLUSTER_NAME: ${self:provider.ecs_cluster_name}
+      ECR_REPO_NAME: ${self:provider.environment.ecr_repo_name}
+      ECS_CLUSTER_NAME: ${self:provider.environment.ecs_cluster_name}
 resources:
   Resources:
     LambdaSecurityGroup:
