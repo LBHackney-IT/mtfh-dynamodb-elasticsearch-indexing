@@ -8,7 +8,7 @@ orbs:
 executors:
   docker-python:
     docker:
-      - image: circleci/python:3.7
+      - image: cimg/python:3.13.2
   docker-terraform:
     docker:
       - image: "hashicorp/terraform:light"
@@ -113,6 +113,7 @@ commands:
             export TF_VAR_ecr_repo_name=<<parameters.ecr_repo_name>>
             cd ./terraform/<<parameters.environment_name>>/
             terraform apply -auto-approve
+          no_output_timeout: "40m"
   terraform-deploy-ecs-task:
     description: "Deploy ECS task using terraform."
     parameters:
@@ -187,12 +188,13 @@ commands:
             chmod +x ./build.sh
             ./build.sh
       - run:
-          name: Deploy lambda
+          name: remove lambda
           command: |
             AWS_ECS_TASK_ARN=`cat /tmp/workspace/aws_ecs_task_arn`
             cd ./DynamoDBIndexing/
             sls remove --stage <<parameters.stage>> --param='account=<<parameters.aws-account>>' --param ='aws_ecs_task_arn=$AWS_ECS_TASK_ARN' \
                        --param='ecr_repo_name=<<parameters.ecr_repo_name>>' --param='ecs_cluster_name=<<parameters.ecs_cluster_name>>' --conceal
+          no_output_timeout: "40m"
 
 jobs:
   check-code-formatting:
