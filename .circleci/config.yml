@@ -60,8 +60,7 @@ commands:
       - *attach_workspace
       - checkout
       - aws-cli/install
-      - setup_remote_docker:
-          version: 19.03.13
+      - setup_remote_docker
       - run:
           command: |
             aws ecr get-login-password --region $<<parameters.region>> --profile <<parameters.profile-name>> | docker login --username AWS --password-stdin $<<parameters.account-url>>
