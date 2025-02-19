@@ -243,63 +243,63 @@ jobs:
           environment_name: "production"
           ecs_cluster_name: $ECS_CLUSTER_NAME
           ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-production"
-  # ecr-build-and-push-image-development:
-  #   executor: docker-python
-  #   steps:
-  #     - ecr-build-and-push-image:
-  #         dockerfile: ./DynamoDBIndexingCore/Dockerfile
-  #         path: ./DynamoDBIndexingCore
-  #         account-url: AWS_ECR_HOST_DEV
-  #         repo: "mtfh-dynamodb-elasticsearch-indexing-development"
-  #         region: AWS_REGION
-  #         tag: "${CIRCLE_SHA1}"
-  # ecr-build-and-push-image-staging:
-  #   executor: docker-python
-  #   steps:
-  #     - ecr-build-and-push-image:
-  #         dockerfile: ./DynamoDBIndexingCore/Dockerfile
-  #         path: ./DynamoDBIndexingCore
-  #         account-url: AWS_ECR_HOST_STAGING
-  #         repo: "mtfh-dynamodb-elasticsearch-indexing-staging"
-  #         region: AWS_REGION
-  #         tag: "${CIRCLE_SHA1}"
-  # ecr-build-and-push-image-production:
-  #   executor: docker-python
-  #   steps:
-  #     - ecr-build-and-push-image:
-  #         dockerfile: ./DynamoDBIndexingCore/Dockerfile
-  #         path: ./DynamoDBIndexingCore
-  #         account-url: AWS_ECR_HOST_PRODUCTION
-  #         repo: "mtfh-dynamodb-elasticsearch-indexing-production"
-  #         region: AWS_REGION
-  #         tag: "${CIRCLE_SHA1}"
-  # terraform-deploy-ecs-task-to-development:
-  #   executor: docker-terraform
-  #   steps:
-  #     - terraform-deploy-ecs-task:
-  #         environment_name: "development"
-  #         ecs_cluster_name: $ECS_CLUSTER_NAME
-  #         ecr_host: $AWS_ECR_HOST_DEV
-  #         ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-development"
-  #         ecr_image_sha1: "${CIRCLE_SHA1}"
-  # terraform-deploy-ecs-task-to-staging:
-  #   executor: docker-terraform
-  #   steps:
-  #     - terraform-deploy-ecs-task:
-  #         environment_name: "staging"
-  #         ecs_cluster_name: $ECS_CLUSTER_NAME
-  #         ecr_host: $AWS_ECR_HOST_STAGING
-  #         ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-staging"
-  #         ecr_image_sha1: "${CIRCLE_SHA1}"
-  # terraform-deploy-ecs-task-to-production:
-  #   executor: docker-terraform
-  #   steps:
-  #     - terraform-deploy-ecs-task:
-  #         environment_name: "production"
-  #         ecs_cluster_name: $ECS_CLUSTER_NAME
-  #         ecr_host: $AWS_ECR_HOST_PRODUCTION
-  #         ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-production"
-  #         ecr_image_sha1: "${CIRCLE_SHA1}"
+  ecr-build-and-push-image-development:
+    executor: docker-python
+    steps:
+      - ecr-build-and-push-image:
+          dockerfile: ./DynamoDBIndexingCore/Dockerfile
+          path: ./DynamoDBIndexingCore
+          account-url: AWS_ECR_HOST_DEV
+          repo: "mtfh-dynamodb-elasticsearch-indexing-development"
+          region: AWS_REGION
+          tag: "${CIRCLE_SHA1}"
+  ecr-build-and-push-image-staging:
+    executor: docker-python
+    steps:
+      - ecr-build-and-push-image:
+          dockerfile: ./DynamoDBIndexingCore/Dockerfile
+          path: ./DynamoDBIndexingCore
+          account-url: AWS_ECR_HOST_STAGING
+          repo: "mtfh-dynamodb-elasticsearch-indexing-staging"
+          region: AWS_REGION
+          tag: "${CIRCLE_SHA1}"
+  ecr-build-and-push-image-production:
+    executor: docker-python
+    steps:
+      - ecr-build-and-push-image:
+          dockerfile: ./DynamoDBIndexingCore/Dockerfile
+          path: ./DynamoDBIndexingCore
+          account-url: AWS_ECR_HOST_PRODUCTION
+          repo: "mtfh-dynamodb-elasticsearch-indexing-production"
+          region: AWS_REGION
+          tag: "${CIRCLE_SHA1}"
+  terraform-deploy-ecs-task-to-development:
+    executor: docker-terraform
+    steps:
+      - terraform-deploy-ecs-task:
+          environment_name: "development"
+          ecs_cluster_name: $ECS_CLUSTER_NAME
+          ecr_host: $AWS_ECR_HOST_DEV
+          ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-development"
+          ecr_image_sha1: "${CIRCLE_SHA1}"
+  terraform-deploy-ecs-task-to-staging:
+    executor: docker-terraform
+    steps:
+      - terraform-deploy-ecs-task:
+          environment_name: "staging"
+          ecs_cluster_name: $ECS_CLUSTER_NAME
+          ecr_host: $AWS_ECR_HOST_STAGING
+          ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-staging"
+          ecr_image_sha1: "${CIRCLE_SHA1}"
+  terraform-deploy-ecs-task-to-production:
+    executor: docker-terraform
+    steps:
+      - terraform-deploy-ecs-task:
+          environment_name: "production"
+          ecs_cluster_name: $ECS_CLUSTER_NAME
+          ecr_host: $AWS_ECR_HOST_PRODUCTION
+          ecr_repo_name: "mtfh-dynamodb-elasticsearch-indexing-production"
+          ecr_image_sha1: "${CIRCLE_SHA1}"
   deploy-to-development:
     executor: docker-dotnet
     steps:
@@ -342,24 +342,24 @@ workflows:
           filters:
             branches:
               only: master
-      - ecr-build-and-push-image-development:
-          requires:
-            - terraform-init-and-apply-to-development
-          filters:
-            branches:
-              only: master
-      - terraform-deploy-ecs-task-to-development:
-          requires:
-            - ecr-build-and-push-image-development
-          filters:
-            branches:
-              only: master
-      - deploy-to-development:
-          requires:
-            - terraform-deploy-ecs-task-to-development
-          filters:
-            branches:
-              only: master
+      # - ecr-build-and-push-image-development:
+      #     requires:
+      #       - terraform-init-and-apply-to-development
+      #     filters:
+      #       branches:
+      #         only: master
+      # - terraform-deploy-ecs-task-to-development:
+      #     requires:
+      #       - ecr-build-and-push-image-development
+      #     filters:
+      #       branches:
+      #         only: master
+      # - deploy-to-development:
+      #     requires:
+      #       - terraform-deploy-ecs-task-to-development
+      #     filters:
+      #       branches:
+      #         only: master
   check-and-deploy-staging-and-production:
       jobs:
       - check-code-formatting
@@ -376,28 +376,28 @@ workflows:
           filters:
             branches:
               only: release
-      - ecr-build-and-push-image-staging:
-          requires:
-            - terraform-init-and-apply-to-staging
-          filters:
-            branches:
-              only: release
-      - terraform-deploy-ecs-task-to-staging:
-          requires:
-            - ecr-build-and-push-image-staging
-          filters:
-            branches:
-              only: release
-      - deploy-to-staging:
-          requires:
-            - terraform-deploy-ecs-task-to-staging
-          filters:
-            branches:
-              only: release
-      - permit-production-terraform-release:
-          type: approval
-          requires:
-            - deploy-to-staging
+      # - ecr-build-and-push-image-staging:
+      #     requires:
+      #       - terraform-init-and-apply-to-staging
+      #     filters:
+      #       branches:
+      #         only: release
+      # - terraform-deploy-ecs-task-to-staging:
+      #     requires:
+      #       - ecr-build-and-push-image-staging
+      #     filters:
+      #       branches:
+      #         only: release
+      # - deploy-to-staging:
+      #     requires:
+      #       - terraform-deploy-ecs-task-to-staging
+      #     filters:
+      #       branches:
+      #         only: release
+      # - permit-production-terraform-release:
+      #     type: approval
+      #     requires:
+      #       - deploy-to-staging
       - assume-role-production:
           context: api-assume-role-housing-production-context
           requires:
@@ -411,31 +411,31 @@ workflows:
           filters:
             branches:
               only: release
-      - ecr-build-and-push-image-production:
-          requires:
-            - terraform-init-and-apply-to-production
-          filters:
-            branches:
-              only: release
-      - permit-production-release:
-          type: approval
-          requires:
-            - deploy-to-staging
-            - ecr-build-and-push-image-production
-          filters:
-            branches:
-              only: release
-      - terraform-deploy-ecs-task-to-production:
-          requires:
-            - permit-production-release
-            - ecr-build-and-push-image-production
-          filters:
-            branches:
-              only: release
-      - deploy-to-production:
-          requires:
-            - permit-production-release
-            - terraform-deploy-ecs-task-to-production
-          filters:
-            branches:
-              only: release
+      # - ecr-build-and-push-image-production:
+      #     requires:
+      #       - terraform-init-and-apply-to-production
+      #     filters:
+      #       branches:
+      #         only: release
+      # - permit-production-release:
+      #     type: approval
+      #     requires:
+      #       - deploy-to-staging
+      #       - ecr-build-and-push-image-production
+      #     filters:
+      #       branches:
+      #         only: release
+      # - terraform-deploy-ecs-task-to-production:
+      #     requires:
+      #       - permit-production-release
+      #       - ecr-build-and-push-image-production
+      #     filters:
+      #       branches:
+      #         only: release
+      # - deploy-to-production:
+      #     requires:
+      #       - permit-production-release
+      #       - terraform-deploy-ecs-task-to-production
+      #     filters:
+      #       branches:
+      #         only: release
