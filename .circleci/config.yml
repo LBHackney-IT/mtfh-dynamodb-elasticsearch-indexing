@@ -341,21 +341,21 @@ workflows:
           filters:
             branches:
               only: master
-      - ecr-build-and-push-image-development:
-          requires:
-            - terraform-init-and-apply-to-development
-          filters:
-            branches:
-              only: master
-      - terraform-deploy-ecs-task-to-development:
-          requires:
-            - ecr-build-and-push-image-development
-          filters:
-            branches:
-              only: master
+      # - ecr-build-and-push-image-development:
+      #     requires:
+      #       - terraform-init-and-apply-to-development
+      #     filters:
+      #       branches:
+      #         only: master
+      # - terraform-deploy-ecs-task-to-development:
+      #     requires:
+      #       - ecr-build-and-push-image-development
+      #     filters:
+      #       branches:
+      #         only: master
       - deploy-to-development:
           requires:
-            - terraform-deploy-ecs-task-to-development
+            - terraform-init-and-apply-to-development
           filters:
             branches:
               only: master
@@ -375,21 +375,21 @@ workflows:
           filters:
             branches:
               only: release
-      - ecr-build-and-push-image-staging:
-          requires:
-            - terraform-init-and-apply-to-staging
-          filters:
-            branches:
-              only: release
-      - terraform-deploy-ecs-task-to-staging:
-          requires:
-            - ecr-build-and-push-image-staging
-          filters:
-            branches:
-              only: release
+      # - ecr-build-and-push-image-staging:
+      #     requires:
+      #       - terraform-init-and-apply-to-staging
+      #     filters:
+      #       branches:
+      #         only: release
+      # - terraform-deploy-ecs-task-to-staging:
+      #     requires:
+      #       - ecr-build-and-push-image-staging
+      #     filters:
+      #       branches:
+      #         only: release
       - deploy-to-staging:
           requires:
-            - terraform-deploy-ecs-task-to-staging
+            - terraform-init-and-apply-to-staging
           filters:
             branches:
               only: release
@@ -410,31 +410,31 @@ workflows:
           filters:
             branches:
               only: release
-      - ecr-build-and-push-image-production:
-          requires:
-            - terraform-init-and-apply-to-production
-          filters:
-            branches:
-              only: release
+      # - ecr-build-and-push-image-production:
+      #     requires:
+      #       - terraform-init-and-apply-to-production
+      #     filters:
+      #       branches:
+      #         only: release
       - permit-production-release:
           type: approval
           requires:
             - deploy-to-staging
-            - ecr-build-and-push-image-production
+      #       - ecr-build-and-push-image-production
           filters:
             branches:
               only: release
-      - terraform-deploy-ecs-task-to-production:
-          requires:
-            - permit-production-release
-            - ecr-build-and-push-image-production
-          filters:
-            branches:
-              only: release
+      # - terraform-deploy-ecs-task-to-production:
+      #     requires:
+      #       - permit-production-release
+      #       - ecr-build-and-push-image-production
+      #     filters:
+      #       branches:
+      #         only: release
       - deploy-to-production:
           requires:
             - permit-production-release
-            - terraform-deploy-ecs-task-to-production
+      #       - terraform-deploy-ecs-task-to-production
           filters:
             branches:
               only: release
