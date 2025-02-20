@@ -167,7 +167,7 @@ commands:
       ecs_cluster_name:
         type: string
     steps:
-      # - *attach_workspace
+      - *attach_workspace
       # - attach_workspace:
       #     at: /tmp/workspace
       - checkout
