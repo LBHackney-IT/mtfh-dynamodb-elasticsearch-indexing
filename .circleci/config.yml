@@ -168,8 +168,8 @@ commands:
         type: string
     steps:
       - *attach_workspace
-      - attach_workspace:
-          at: /tmp/workspace
+      # - attach_workspace:
+      #     at: /tmp/workspace
       - checkout
       - setup_remote_docker
       - run:
@@ -189,7 +189,7 @@ commands:
       - run:
           name: remove lambda
           command: |
-            AWS_ECS_TASK_ARN=`cat /tmp/workspace/aws_ecs_task_arn`
+            AWS_ECS_TASK_ARN=some_bogus_value
             cd ./DynamoDBIndexing/
             sls remove --stage <<parameters.stage>> --param='account=<<parameters.aws-account>>' --param ='aws_ecs_task_arn=$AWS_ECS_TASK_ARN' \
                        --param='ecr_repo_name=<<parameters.ecr_repo_name>>' --param='ecs_cluster_name=<<parameters.ecs_cluster_name>>' --conceal
