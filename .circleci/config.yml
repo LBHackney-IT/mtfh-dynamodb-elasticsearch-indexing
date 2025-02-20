@@ -8,7 +8,7 @@ orbs:
 executors:
   docker-python:
     docker:
-      - image: circleci/python:3.7
+      - image: cimg/python:3.13
   docker-terraform:
     docker:
       - image: "hashicorp/terraform:light"
@@ -60,8 +60,7 @@ commands:
       - *attach_workspace
       - checkout
       - aws-cli/install
-      - setup_remote_docker:
-          version: 19.03.13
+      - setup_remote_docker
       - run:
           command: |
             aws ecr get-login-password --region $<<parameters.region>> --profile <<parameters.profile-name>> | docker login --username AWS --password-stdin $<<parameters.account-url>>
@@ -113,6 +112,7 @@ commands:
             export TF_VAR_ecr_repo_name=<<parameters.ecr_repo_name>>
             cd ./terraform/<<parameters.environment_name>>/
             terraform apply -auto-approve
+          no_output_timeout: "40m"
   terraform-deploy-ecs-task:
     description: "Deploy ECS task using terraform."
     parameters:
@@ -168,18 +168,18 @@ commands:
         type: string
     steps:
       - *attach_workspace
-      - attach_workspace:
-          at: /tmp/workspace
+      # - attach_workspace:
+      #     at: /tmp/workspace
       - checkout
       - setup_remote_docker
       - run:
           name: Install Node.js
           command: |
-            curl -sL https://deb.nodesource.com/setup_14.x | bash -
+            curl -sL https://deb.nodesource.com/setup_20.x | bash -
             apt-get update && apt-get install -y nodejs
       - run:
           name: Install serverless CLI
-          command: npm i -g serverless
+          command: npm i -g serverless@^3
       - run:
           name: Build lambda
           command: |
@@ -187,12 +187,13 @@ commands:
             chmod +x ./build.sh
             ./build.sh
       - run:
-          name: Deploy lambda
+          name: remove lambda
           command: |
-            AWS_ECS_TASK_ARN=`cat /tmp/workspace/aws_ecs_task_arn`
+            AWS_ECS_TASK_ARN=some_bogus_value
             cd ./DynamoDBIndexing/
-            sls deploy --stage <<parameters.stage>> --param='account=<<parameters.aws-account>>' --param ='aws_ecs_task_arn=$AWS_ECS_TASK_ARN' \
-                       --param='ecr_repo_name=<<parameters.ecr_repo_name>>' --param='ecs_cluster_name=<<parameters.ecs_cluster_name>>' --conceal
+            sls remove --stage <<parameters.stage>> --param='account=<<parameters.aws-account>>' --param ='aws_ecs_task_arn=$AWS_ECS_TASK_ARN' \
+                       --param='ecr_repo_name=<<parameters.ecr_repo_name>>' --param='ecs_cluster_name=<<parameters.ecs_cluster_name>>' --verbose
+          no_output_timeout: "40m"
 
 jobs:
   check-code-formatting:
@@ -340,21 +341,21 @@ workflows:
           filters:
             branches:
               only: master
-      - ecr-build-and-push-image-development:
-          requires:
-            - terraform-init-and-apply-to-development
-          filters:
-            branches:
-              only: master
-      - terraform-deploy-ecs-task-to-development:
-          requires:
-            - ecr-build-and-push-image-development
-          filters:
-            branches:
-              only: master
+      # - ecr-build-and-push-image-development:
+      #     requires:
+      #       - terraform-init-and-apply-to-development
+      #     filters:
+      #       branches:
+      #         only: master
+      # - terraform-deploy-ecs-task-to-development:
+      #     requires:
+      #       - ecr-build-and-push-image-development
+      #     filters:
+      #       branches:
+      #         only: master
       - deploy-to-development:
           requires:
-            - terraform-deploy-ecs-task-to-development
+            - terraform-init-and-apply-to-development
           filters:
             branches:
               only: master
@@ -374,21 +375,21 @@ workflows:
           filters:
             branches:
               only: release
-      - ecr-build-and-push-image-staging:
-          requires:
-            - terraform-init-and-apply-to-staging
-          filters:
-            branches:
-              only: release
-      - terraform-deploy-ecs-task-to-staging:
-          requires:
-            - ecr-build-and-push-image-staging
-          filters:
-            branches:
-              only: release
+      # - ecr-build-and-push-image-staging:
+      #     requires:
+      #       - terraform-init-and-apply-to-staging
+      #     filters:
+      #       branches:
+      #         only: release
+      # - terraform-deploy-ecs-task-to-staging:
+      #     requires:
+      #       - ecr-build-and-push-image-staging
+      #     filters:
+      #       branches:
+      #         only: release
       - deploy-to-staging:
           requires:
-            - terraform-deploy-ecs-task-to-staging
+            - terraform-init-and-apply-to-staging
           filters:
             branches:
               only: release
@@ -409,31 +410,31 @@ workflows:
           filters:
             branches:
               only: release
-      - ecr-build-and-push-image-production:
-          requires:
-            - terraform-init-and-apply-to-production
-          filters:
-            branches:
-              only: release
+      # - ecr-build-and-push-image-production:
+      #     requires:
+      #       - terraform-init-and-apply-to-production
+      #     filters:
+      #       branches:
+      #         only: release
       - permit-production-release:
           type: approval
           requires:
             - deploy-to-staging
-            - ecr-build-and-push-image-production
+      #       - ecr-build-and-push-image-production
           filters:
             branches:
               only: release
-      - terraform-deploy-ecs-task-to-production:
-          requires:
-            - permit-production-release
-            - ecr-build-and-push-image-production
-          filters:
-            branches:
-              only: release
+      # - terraform-deploy-ecs-task-to-production:
+      #     requires:
+      #       - permit-production-release
+      #       - ecr-build-and-push-image-production
+      #     filters:
+      #       branches:
+      #         only: release
       - deploy-to-production:
           requires:
             - permit-production-release
-            - terraform-deploy-ecs-task-to-production
+      #       - terraform-deploy-ecs-task-to-production
           filters:
             branches:
               only: release
