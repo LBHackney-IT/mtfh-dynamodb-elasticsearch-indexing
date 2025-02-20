@@ -355,8 +355,8 @@ workflows:
       #       branches:
       #         only: master
       - deploy-to-development:
-          # requires:
-          #   - terraform-deploy-ecs-task-to-development
+          requires:
+            - terraform-init-and-apply-to-development:
           filters:
             branches:
               only: master
@@ -389,8 +389,8 @@ workflows:
       #       branches:
       #         only: release
       - deploy-to-staging:
-          # requires:
-          #   - terraform-deploy-ecs-task-to-staging
+          requires:
+            - terraform-init-and-apply-to-staging:
           filters:
             branches:
               only: release
