@@ -395,8 +395,8 @@ workflows:
               only: release
       - permit-production-terraform-release:
           type: approval
-          requires:
-            - deploy-to-staging
+          # requires:
+          #   - deploy-to-staging
       - assume-role-production:
           name: "Assume role for production (first instance)"
           context: api-assume-role-housing-production-context
