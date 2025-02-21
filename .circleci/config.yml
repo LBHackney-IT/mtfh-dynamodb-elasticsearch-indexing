@@ -216,11 +216,18 @@ jobs:
     steps:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_STAGING
-  assume-role-production:
+  assume-role-production-1:
     executor: docker-python
     steps:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_PRODUCTION
+          name: "Assumes Role for production 1" 
+  assume-role-production-2:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_PRODUCTION
+          name: "Assumes Role for production 2"        
   terraform-init-and-apply-to-development:
     executor: docker-terraform
     steps:
@@ -397,7 +404,7 @@ workflows:
           type: approval
           requires:
             - deploy-to-staging
-      - assume-role-production:
+      - assume-role-production-1:
           context: api-assume-role-housing-production-context
           requires:
               - permit-production-terraform-release
@@ -406,7 +413,7 @@ workflows:
                only: release
       - terraform-init-and-apply-to-production:
           requires:
-            - assume-role-production
+            - assume-role-production-1
           filters:
             branches:
               only: release
@@ -431,7 +438,7 @@ workflows:
       #     filters:
       #       branches:
       #         only: release
-      - assume-role-production:
+      - assume-role-production-2:
           context: api-assume-role-housing-production-context
           requires:
               - permit-production-terraform-release
