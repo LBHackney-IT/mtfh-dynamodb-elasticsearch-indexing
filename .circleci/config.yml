@@ -404,6 +404,13 @@ workflows:
           filters:
              branches:
                only: release
+      - assume-role-production:
+          context: api-assume-role-housing-production-context
+          requires:
+              - permit-production-terraform-release
+          filters:
+             branches:
+               only: release
       - terraform-init-and-apply-to-production:
           requires:
             - assume-role-production
@@ -431,16 +438,9 @@ workflows:
       #     filters:
       #       branches:
       #         only: release
-      - assume-role-production:
-          context: api-assume-role-housing-production-context
-          requires:
-              - permit-production-terraform-release
-          filters:
-             branches:
-               only: release
       - deploy-to-production:
           requires:
-            - permit-production-release
+            - terraform-init-and-apply-to-production
       #       - terraform-deploy-ecs-task-to-production
           filters:
             branches:
