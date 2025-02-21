@@ -431,6 +431,13 @@ workflows:
       #     filters:
       #       branches:
       #         only: release
+      - assume-role-production:
+          context: api-assume-role-housing-production-context
+          requires:
+              - permit-production-terraform-release
+          filters:
+             branches:
+               only: release
       - deploy-to-production:
           requires:
             - permit-production-release
