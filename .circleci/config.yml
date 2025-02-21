@@ -395,9 +395,10 @@ workflows:
               only: release
       - permit-production-terraform-release:
           type: approval
-          requires:
-            - deploy-to-staging
+          # requires:
+          #   - deploy-to-staging
       - assume-role-production:
+          name: "Assume role for production (first instance)"
           context: api-assume-role-housing-production-context
           requires:
               - permit-production-terraform-release
@@ -406,7 +407,7 @@ workflows:
                only: release
       - terraform-init-and-apply-to-production:
           requires:
-            - assume-role-production
+            - "Assume role for production (first instance)"
           filters:
             branches:
               only: release
@@ -418,8 +419,8 @@ workflows:
       #         only: release
       - permit-production-release:
           type: approval
-          requires:
-            - deploy-to-staging
+          # requires:
+          #   - deploy-to-staging
       #       - ecr-build-and-push-image-production
           filters:
             branches:
@@ -431,10 +432,17 @@ workflows:
       #     filters:
       #       branches:
       #         only: release
+      - assume-role-production:
+          name: "Assume role for production (second instance)"
+          context: api-assume-role-housing-production-context
+          requires:
+              - permit-production-release
+          filters:
+             branches:
+               only: release
       - deploy-to-production:
           requires:
-            - permit-production-release
-      #       - terraform-deploy-ecs-task-to-production
+            -  "Assume role for production (second instance)"
           filters:
             branches:
               only: release
