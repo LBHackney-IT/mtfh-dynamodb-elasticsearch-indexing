@@ -408,6 +408,7 @@ workflows:
       - terraform-init-and-apply-to-production:
           requires:
             - "Assume role for production (first instance)"
+            - "Assume role for production (second instance)"
           filters:
             branches:
               only: release
@@ -436,14 +437,13 @@ workflows:
           name: "Assume role for production (second instance)"
           context: api-assume-role-housing-production-context
           requires:
-              - permit-production-terraform-release
+              - permit-production-release
           filters:
              branches:
                only: release
       - deploy-to-production:
           requires:
-            - permit-production-release
-      #       - terraform-deploy-ecs-task-to-production
+            -  terraform-init-and-apply-to-production
           filters:
             branches:
               only: release
